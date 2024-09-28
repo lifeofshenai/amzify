@@ -33,7 +33,7 @@ export function createServer(): Application {
 
   // app.use(expressfileupload());
 
-  app.use(`/${AppConfig.app.apiVersion}`, routesV1);
+  app.use(`/api/v${AppConfig.app.apiVersion}`, routesV1);
 
   // app.get("/", (req, res, next) => {
   //   return res.json({hello: "hy"});
