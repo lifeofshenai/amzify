@@ -3,6 +3,7 @@ const collections = {
   users: "users",
   stores: "stores",
   platforms: "platforms",
+  settings: "settings",
 };
 
 export default collections;

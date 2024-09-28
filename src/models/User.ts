@@ -30,8 +30,8 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
-    firstName: {type: String, required: false},
-    lastName: {type: String, required: false},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
     pictureUrl: {type: String, required: false},
     email: {
       type: String,
@@ -53,7 +53,7 @@ const UserSchema = new Schema<IUser>(
       required: [true, "Password is required"],
       minlength: [8, "password must be at least 8 character"],
     },
-    phoneNumber: {type: String, required: true, unique: true, index: true},
+    phoneNumber: {type: String, required: true},
     deviceToken: {type: String},
 
     isActive: {type: Boolean, default: true},
@@ -114,7 +114,7 @@ UserSchema.methods.matchPassword = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-// Generate and hash password
+// Generate and hash password reset token
 UserSchema.methods.getResetPasswordToken = async function (): Promise<string> {
   // generate token
   const resetToken = crypto.randomBytes(20).toString("hex");
