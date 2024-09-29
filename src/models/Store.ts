@@ -1,4 +1,4 @@
-import {model, Schema} from "mongoose";
+import {model, Schema, Document} from "mongoose";
 import collections from "../utils/collections";
 import {IPlatform} from "./Platform";
 
@@ -10,6 +10,8 @@ export interface IStore extends Document {
   url: string;
   logo: string;
   isActive: boolean;
+  shopifyStoreId: string;
+  shopifyAccessToken: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,15 +37,13 @@ const StoreSchema = new Schema<IStore>(
     url: {type: String, required: false},
     logo: {type: String, required: false},
     isActive: {type: Boolean, default: true},
+    shopifyStoreId: {type: String, required: true},
+    shopifyAccessToken: {type: String, required: true},
   },
   {
     timestamps: true,
-    toJSON: {
-      virtuals: true,
-    },
-    toObject: {
-      virtuals: true,
-    },
+    toJSON: {virtuals: true},
+    toObject: {virtuals: true},
   }
 );
 
