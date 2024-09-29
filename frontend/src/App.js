@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import AdminLayout from "./layouts/admin";
+import Dashboard from "./pages/admin/Dashboard";
+import Analytics from "./pages/admin/Analytics";
+
+
+// vendor layout
+import VendorLayout from "./layouts/vendor";
+import VendorDashboard from "./pages/vendor/Dashboard";
+import Products from "./pages/vendor/Products";
+import Orders from "./pages/vendor/Orders";
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<AdminLayout />}>
+        {/* Nested routes under AdminLayout */}
+        <Route index element={<Dashboard />} />
+        <Route path="analytics" element={<Analytics />} />
+      </Route>
+      {/* Vendor Routes Section */}
+      
+     <Route path="/vendor" element={<VendorLayout />}>
+        {/* Nested routes under VendorLayout */}
+        <Route index element={<VendorDashboard />} />
+        <Route path="products" element={<Products />} />
+        <Route path="orders" element={<Orders />} />
+      </Route>
+    </Routes>
   );
 }
 
