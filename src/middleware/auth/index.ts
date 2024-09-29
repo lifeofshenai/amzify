@@ -8,7 +8,7 @@ import ErrorLogger from "../../utils/logger";
 
 class Auth {
   async authenticate(
-    req: Request | any,
+    req: Request,
     res: Response,
     next: NextFunction
   ): Promise<any> {
@@ -58,10 +58,9 @@ class Auth {
   }
 
   checkRoles(...roles: string[]) {
-    return async (req: Request | any, res: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       const user = req.user;
-      // console.log(user);
-      const roleUser = user.role;
+      const roleUser = user?.role;
       if (!roleUser) {
         return res.sendStatus(HTTP_STATUS.FORBIDDEN_403);
       }

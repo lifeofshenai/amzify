@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node ./build/index.js",
     "dev": "nodemon src/index.ts",
-    "start-watch": "nodemon --delay 5000ms --exec npm run start"
+    "start-watch": "nodemon --delay 5000ms --exec yarn run start"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
