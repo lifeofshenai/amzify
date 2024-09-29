@@ -6,7 +6,7 @@ const AppConfig = {
       <string>process.env.SERVER
     ),
     port: parseInt(<string>process.env.PORT, 10) || 4000,
-    apiVersion: process.env.API_VERSION || "api/v1",
+    apiVersion: process.env.API_VERSION || 1,
     secret: process.env.SECRET || "j!89nKO5as&Js",
     tempSecret: process.env.TEMP_SECRET || "dlu93hccu!&Hg0",
     hashSalt: parseInt(<string>process.env.HASH_SALT, 10) || 10,
