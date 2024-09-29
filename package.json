@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node ./build/index.js",
     "dev": "nodemon src/index.ts",
+    "build": "tsc",
     "start-watch": "nodemon --delay 5000ms --exec npm run start"
   },
   "devDependencies": {
