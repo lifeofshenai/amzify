@@ -5,6 +5,8 @@ import AdminLayout from "./layouts/admin";
 import Analytics from "./pages/admin/Analytics";
 import Dashboard from "./pages/admin/Dashboard";
 import VendorManagement from "./pages/admin/VendorManagement";
+import AddVendor from "./pages/admin/AddVendorForm";
+
 
 
 // Main Site Pages
@@ -18,6 +20,7 @@ function App() {
         <Route index element={<Dashboard />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="vendor" element={<VendorManagement />} />
+        <Route path="vendor/add-vendor" element={<AddVendor />} />{" "}
       </Route>
 
       {/* Public Routes */}
