@@ -5,32 +5,16 @@ import {HTTP_STATUS} from "../utils/constants/statusCodes";
 import {sendErrorResponse, sendSuccessResponse} from "../utils/server";
 import {IStore} from "../models/Store";
 import ErrorResponse from "../utils/error";
+import {IUser} from "../models/User";
 
 export const createVendor = async (
-  req: Request,
+  req: Request | any,
   res: Response
 ): Promise<any> => {
   try {
     const payload = req.body;
-    const user = req.user; // Assuming req.user is populated by auth middleware
 
-    // Validate required fields
-    const requiredFields = [
-      "name",
-      "description",
-      "shopifyStoreId",
-      "shopifyAccessToken",
-    ];
-    for (const field of requiredFields) {
-      if (!payload[field]) {
-        return sendErrorResponse(
-          res,
-          new ErrorResponse(HTTP_STATUS.BAD_REQUEST_400, `${field} is required`)
-        );
-      }
-    }
-
-    const store: IStore = await VendorService.createVendor(user, payload);
+    const store: IStore = await VendorService.createVendor(payload);
 
     sendSuccessResponse(
       res,
@@ -43,7 +27,10 @@ export const createVendor = async (
   }
 };
 
-export const getVendors = async (req: Request, res: Response): Promise<any> => {
+export const getVendors = async (
+  req: Request | any,
+  res: Response
+): Promise<any> => {
   try {
     const stores: IStore[] = await VendorService.getVendors();
     sendSuccessResponse(
@@ -58,7 +45,7 @@ export const getVendors = async (req: Request, res: Response): Promise<any> => {
 };
 
 export const getVendorById = async (
-  req: Request,
+  req: Request | any,
   res: Response
 ): Promise<any> => {
   try {
@@ -76,7 +63,7 @@ export const getVendorById = async (
 };
 
 export const updateVendor = async (
-  req: Request,
+  req: Request | any,
   res: Response
 ): Promise<any> => {
   try {
@@ -94,29 +81,11 @@ export const updateVendor = async (
   }
 };
 
-export const deleteVendor = async (
-  req: Request,
-  res: Response
-): Promise<any> => {
-  try {
-    const {id} = req.params;
-    const store: IStore = await VendorService.deleteVendor(id);
-    sendSuccessResponse(
-      res,
-      HTTP_STATUS.OK_200,
-      {store},
-      "Vendor deleted successfully"
-    );
-  } catch (error) {
-    sendErrorResponse(res, error);
-  }
-};
-
 /**
  * Endpoint to synchronize products from Shopify
  */
 export const syncProducts = async (
-  req: Request,
+  req: Request | any,
   res: Response
 ): Promise<any> => {
   try {

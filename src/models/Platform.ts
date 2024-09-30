@@ -16,7 +16,12 @@ const PlatformSchema = new Schema<IPlatform>(
     name: {type: String, required: true},
     description: {type: String, required: true},
     url: {type: String, required: false},
-    logo: {type: String, required: false},
+    logo: {
+      type: String,
+      required: false,
+      default:
+        "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
+    },
     isActive: {type: Boolean, default: true},
   },
   {

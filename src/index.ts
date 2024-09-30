@@ -8,6 +8,8 @@ import connectDB from "./database";
 import {Server as socketServer} from "socket.io";
 import http from "http";
 import Logger from "./middleware/morgan/logger";
+import {User} from "./models/User";
+import {ROLES} from "./utils/constants";
 
 const PORT = AppConfig.app.port;
 

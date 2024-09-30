@@ -1,8 +1,11 @@
 import {Store, IStore} from "../../models/Store";
-import {IUser} from "../../models/User";
+import {IUser, User} from "../../models/User";
 import ErrorResponse from "../../utils/error";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ShopifyService from "../shopify/ShopifyService";
+import {encrypt} from "../../utils/encryption";
+import {ROLES} from "../../utils/constants";
+import mongoose from "mongoose";
 
 class VendorService {
   /**
@@ -10,8 +13,17 @@ class VendorService {
    * @param user -  vendor user
    * @param payload - Vendor details
    */
-  async createVendor(user: IUser, payload: any): Promise<IStore> {
+  async createVendor(payload: IUser & IStore): Promise<IStore> {
+    const session = await mongoose.startSession();
     try {
+      await session.startTransaction();
+      const user = new User({
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        email: payload.email,
+        role: ROLES.vendor,
+        password: "@store123", //TODO auto generate
+      });
       // Create Store
       const store = new Store({
         vendor: user._id,
@@ -21,14 +33,19 @@ class VendorService {
         url: payload.url,
         logo: payload.logo,
         shopifyStoreId: payload.shopifyStoreId,
-        shopifyAccessToken: payload.shopifyAccessToken, // Ensure this is provided
+        shopifyAccessToken: encrypt(payload.shopifyAccessToken), // Encrypt access token
       });
 
-      await store.save();
+      await user.save({session});
+      await store.save({session});
 
+      await session.commitTransaction();
       return store;
     } catch (error: any) {
-      throw new ErrorResponse(HTTP_STATUS.BAD_REQUEST_400, error.message);
+      await session.abortTransaction();
+      throw error;
+    } finally {
+      await session.endSession();
     }
   }
 
@@ -41,6 +58,27 @@ class VendorService {
         .populate("vendor", "-password") // Exclude password field
         .populate("platforms");
       return stores;
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        error.message
+      );
+    }
+  }
+
+  /**
+   * Retrieve a single store by vendor ID
+   * @param id - vendor ID
+   */
+  async getVendorStore(id: string): Promise<IStore> {
+    try {
+      const store = await Store.findOne({vendor: id})
+        // .populate("vendor", "-password")
+        .populate("platforms");
+      if (!store) {
+        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Vendor not found");
+      }
+      return store;
     } catch (error: any) {
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
@@ -80,25 +118,6 @@ class VendorService {
       const store = await Store.findByIdAndUpdate(id, payload, {new: true})
         .populate("vendor", "-password")
         .populate("platforms");
-      if (!store) {
-        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Vendor not found");
-      }
-      return store;
-    } catch (error: any) {
-      throw new ErrorResponse(
-        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
-        error.message
-      );
-    }
-  }
-
-  /**
-   * Delete a vendor store
-   * @param id - Store ID
-   */
-  async deleteVendor(id: string): Promise<IStore> {
-    try {
-      const store = await Store.findByIdAndDelete(id);
       if (!store) {
         throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Vendor not found");
       }
