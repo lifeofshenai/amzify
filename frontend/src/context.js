@@ -1,19 +1,24 @@
-import { useState, useContext, createContext } from "react";
+// context/AppContext.js
+import { createContext, useContext, useState } from "react";
 
 const GlobalContext = createContext();
 
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const AppContext = ({ children }) => {
-  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Function to toggle the sidebar
-  const toggleSidebar = () => {
-    setSidebarOpen((prevState) => !prevState);
+  const openSidebar = () => {
+    setIsSidebarOpen(true);
+  };
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
   };
 
   return (
-    <GlobalContext.Provider value={{ isSidebarOpen, toggleSidebar }}>
+    <GlobalContext.Provider
+      value={{ openSidebar, closeSidebar, isSidebarOpen }}
+    >
       {children}
     </GlobalContext.Provider>
   );
