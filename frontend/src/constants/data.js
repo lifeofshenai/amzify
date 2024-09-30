@@ -350,6 +350,39 @@ export const links = [
   },
 ];
 
+export const vendorLinks = [
+  {
+    id: 1,
+    url: "/vendor", 
+    text: "Dashboard",
+    icon: <FaHome />,
+  },
+  {
+    id: 2,
+    url: "products", 
+    text: "Products",
+    icon: <FaBox />,
+  },
+  {
+    id: 3,
+    url: "orders",
+    text: "Orders",
+    icon: <FaClipboardList />,
+  },
+  {
+    id: 4,
+    url: "analytics", 
+    text: "Analytics",
+    icon: <FaChartLine />,
+  },
+  {
+    id: 5,
+    url: "settings", 
+    text: "Settings",
+    icon: <FaCog />,
+  },
+];
+
 export const products = [
   {
     id: 1,
