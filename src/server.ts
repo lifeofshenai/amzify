@@ -31,13 +31,7 @@ export function createServer(): Application {
   // app.use(compression());
   app.use(MorganMiddleware);
 
-  // app.use(expressfileupload());
-
   app.use(`/api/v${AppConfig.app.apiVersion}`, routesV1);
-
-  // app.get("/", (req, res, next) => {
-  //   return res.json({hello: "hy"});
-  // });
 
   app.use(errorHandler);
 

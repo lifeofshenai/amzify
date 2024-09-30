@@ -15,7 +15,7 @@ class AuthService {
     try {
       const user = await User.findOne({
         email: payload.email.toLowerCase(),
-      });
+      }).select("+password");
 
       if (!user) {
         throw new Error("Invalid credentials, check your email again.");
@@ -56,12 +56,7 @@ class AuthService {
     } catch (error: any) {
       ErrorLogger(error);
       return {
-        err: error.status
-          ? error
-          : new ErrorResponse(
-              HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
-              error.message
-            ),
+        err: error,
       };
     }
   }

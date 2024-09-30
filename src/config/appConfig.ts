@@ -22,28 +22,14 @@ const AppConfig = {
   db: {
     mongo_url: process.env.MONGO_URL || "",
   },
+  shopify: {
+    apiKey: process.env.SHOPIFY_API_KEY || "",
+    apiSecret: process.env.SHOPIFY_API_SECRET || "",
+    scopes: process.env.SHOPIFY_SCOPES || "",
+    appUrl: process.env.SHOPIFY_APP_URL || "",
+  },
 
-  paystack: {
-    baseUrl: process.env.PAYSTACK_URL || "",
-    secretKey: process.env.PAYSTACK_SECRET_KEY,
-    publicKey: process.env.PAYSTACK_PUBLIC_KEY,
-  },
-  paymentChannel: "paystack",
-  walletFundCharge: 20,
-  withdrawalCharge: 20,
-  nodemailer: {
-    service: process.env.SMTP_SERVICE,
-    port: process.env.SMTP_PORT,
-    user: process.env.SMTP_EMAIL,
-    pass: process.env.SMTP_PASSWORD,
-    fromName: process.env.FROM_NAME,
-    fromEmail: process.env.FROM_EMAIL,
-  },
-  checkId: {
-    baseUrl: process.env.CHECK_ID_URL,
-    token: process.env.CHECK_ID_TOKEN,
-  },
-  defaultCommissionFee: 2,
+  defaultCommissionFee: 10,
 };
 
 export default Object.freeze(AppConfig);

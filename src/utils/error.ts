@@ -3,7 +3,7 @@ class ErrorResponse extends Error {
   message;
   success;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: any) {
     super(message);
     this.message = message;
     this.status = status;
