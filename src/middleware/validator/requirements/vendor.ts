@@ -3,11 +3,11 @@ import {Platform} from "../../../models/Platform";
 
 const vendorRequirement = {
   validateShopifyAuth: [
-    query("storeUrl")
-      .isURL()
-      .withMessage("Valid store URL is required")
+    query("storeId")
+      // .isURL()
+      // .withMessage("Valid store URL is required")
       .notEmpty()
-      .withMessage("Store URL cannot be empty"),
+      .withMessage("Store ID cannot be empty"),
   ],
   createVendor: [
     body("firstName").isString().isLength({min: 3}),

@@ -7,13 +7,23 @@ import {Store} from "../models/Store";
 import {ROLES} from "../utils/constants";
 import shopify from "../services/shopify/shopify";
 import {encrypt} from "../utils/encryption";
+import VendorService from "../services/vendor/VendorService";
+import {sendErrorResponse} from "../utils/server";
+import ErrorLogger from "../utils/logger";
+import appConfig from "../config/appConfig";
 
 export const initiateShopifyAuth = async (
   req: Request | any,
   res: Response
 ): Promise<void> => {
   try {
-    const {storeUrl} = req.query;
+    const {storeId} = req.query;
+
+    const store = await VendorService.getVendorById(storeId);
+    if (!store) {
+      throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, `Store not found`);
+    }
+    const storeUrl = `${store.shopifyStoreId}.myshopify.com`;
 
     if (!storeUrl || typeof storeUrl !== "string") {
       throw new ErrorResponse(HTTP_STATUS.BAD_REQUEST_400, "Invalid store URL");
@@ -24,7 +34,7 @@ export const initiateShopifyAuth = async (
       throw new ErrorResponse(HTTP_STATUS.BAD_REQUEST_400, "Invalid store URL");
 
     const redirectUrl = await shopify.auth.begin({
-      callbackPath: "/api/v1/shopify/callback",
+      callbackPath: `/api/v${appConfig.app.apiVersion}/shopify/callback`,
       shop,
       isOnline: false,
       rawRequest: req,
@@ -33,10 +43,7 @@ export const initiateShopifyAuth = async (
 
     res.redirect(redirectUrl);
   } catch (error: any) {
-    res.status(error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR_500).json({
-      success: false,
-      error: error.message || "Internal Server Error",
-    });
+    ErrorLogger(error, res);
   }
 };
 
@@ -77,7 +84,7 @@ export const handleShopifyCallback = async (
     res.status(HTTP_STATUS.OK_200).json({
       success: true,
       message: "Shopify store connected successfully",
-      store,
+      //   store,
     });
   } catch (error: any) {
     res.status(error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR_500).json({
