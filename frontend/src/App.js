@@ -11,6 +11,7 @@ import AddVendor from "./pages/admin/AddVendorForm";
 
 // Vendor Pages
 import VendorDashboard from "./pages/vendor/Dashboard";
+import Products from "./pages/vendor/Products";
 
 // Main Site Pages
 import LoginPage from "./pages/LoginPage";
@@ -29,6 +30,7 @@ function App() {
       {/* Vendor Routes */}
       <Route path="/vendor" element={<VendorLayout />}>
         <Route index element={<VendorDashboard />} />
+        <Route path="products" element={<Products />} />
       </Route>
 
 
