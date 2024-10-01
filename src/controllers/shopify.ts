@@ -8,7 +8,7 @@ import {ROLES} from "../utils/constants";
 import shopify from "../services/shopify/shopify";
 import {encrypt} from "../utils/encryption";
 import VendorService from "../services/vendor/VendorService";
-import {sendErrorResponse} from "../utils/server";
+import {sendErrorResponse, sendSuccessResponse} from "../utils/server";
 import ErrorLogger from "../utils/logger";
 import appConfig from "../config/appConfig";
 
@@ -41,7 +41,7 @@ export const initiateShopifyAuth = async (
       rawResponse: res,
     });
 
-    res.redirect(redirectUrl);
+    sendSuccessResponse(res, HTTP_STATUS.OK_200, {redirectUrl}, `Success`);
   } catch (error: any) {
     ErrorLogger(error, res);
   }
