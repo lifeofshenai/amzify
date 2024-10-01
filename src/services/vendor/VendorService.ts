@@ -3,7 +3,7 @@ import {IUser, User} from "../../models/User";
 import ErrorResponse from "../../utils/error";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ShopifyService from "../shopify/ShopifyService";
-import {encrypt} from "../../utils/encryption";
+import {decrypt, encrypt} from "../../utils/encryption";
 import {ROLES} from "../../utils/constants";
 import mongoose from "mongoose";
 
@@ -141,10 +141,12 @@ class VendorService {
         throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
       }
 
+      const accessToken = decrypt(store.shopifyAccessToken);
       const shopifyService = new ShopifyService(
         store.shopifyStoreId,
-        store.shopifyAccessToken
+        accessToken
       );
+
       const products = await shopifyService.fetchProducts();
 
       // Here, you can choose to store products in your database or process them as needed
