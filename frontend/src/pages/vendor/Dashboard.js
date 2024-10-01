@@ -1,5 +1,5 @@
 import DashboardStats from "../../components/DashboardStats";
-import OrdersTable from "../../components/OrdersTable";
+import SaleSummary from "../../components/SaleSummary";
 import TopProductsTable from "../../components/TopProductsTable";
 
 
@@ -8,12 +8,14 @@ const VendorDashboard = () => {
     <div>
       {/* Dashboard Stats */}
       <DashboardStats />
+      <SaleSummary />
+      <TopProductsTable />
       
       {/* Orders Table */}
-      <OrdersTable />
+      {/* <OrdersTable /> */}
       
       {/* Top Products Table */}
-      <TopProductsTable />
+      {/* <TopProductsTable /> */}
     </div>
   );
 };

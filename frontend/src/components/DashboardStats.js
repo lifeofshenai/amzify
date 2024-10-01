@@ -1,74 +1,114 @@
 import React, { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 
-// Dummy product data for the slider
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'E-Z T-Shirt',
-    price: '$89.00',
-    image: '/logo192.png'
-  },
-  {
-    id: 2,
-    name: 'Geeks Hoodie',
-    price: '$59.00',
-    image: '/logo192.png'
-  },
-  {
-    id: 3,
-    name: 'Sport Shoes',
-    price: '$120.00',
-    image: '/admin.jpg'
-  },
-];
+// Import data from the separate file
+import {
+  products,
+  initialChartData,
+  oneYearChartData,
+  twoYearsChartData,
+} from "../constants/data";
 
-// Dummy data for the line chart
-const data = [
-  { month: 'Feb', earned: 10, sales: 20 },
-  { month: 'Mar', earned: 50, sales: 40 },
-  { month: 'Apr', earned: 30, sales: 60 },
-  { month: 'May', earned: 70, sales: 80 },
-  { month: 'Jun', earned: 40, sales: 90 },
-  { month: 'Jul', earned: 100, sales: 110 },
-];
+// Register components for Chart.js
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
+
+// Options for chart styling
+const chartOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+    legend: {
+      display: true,
+      position: 'top',
+      labels: {
+        boxWidth: 10,
+        usePointStyle: true,
+        color: '#4A4A4A',
+      },
+    },
+    tooltip: {
+      enabled: true,
+    },
+  },
+  scales: {
+    x: {
+      grid: {
+        display: false,
+      },
+      ticks: {
+        color: '#4A4A4A',
+      },
+    },
+    y: {
+      grid: {
+        display: true,
+        borderDash: [5, 5],
+        color: '#E5E7EB',
+      },
+      ticks: {
+        color: '#4A4A4A',
+      },
+    },
+  },
+};
 
 const DashboardStats = () => {
   const [selectedRange, setSelectedRange] = useState('6 months');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  // Dynamic state for chart data
+  const [chartData, setChartData] = useState(initialChartData);
+
   const timeRanges = ['6 months', '1 year', '2 years'];
 
   const handleRangeSelect = (range) => {
     setSelectedRange(range);
     setIsDropdownOpen(false);
+
+    // Update chart data when time range changes
+    if (range === '1 year') {
+      setChartData(oneYearChartData); // Set to 1 year chart data
+    } else if (range === '2 years') {
+      setChartData(twoYearsChartData); // Set to 2 years chart data
+    } else {
+      setChartData(initialChartData); // Reset to 6 months data
+    }
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % featuredProducts.length);
+    setCurrentSlide((prev) => (prev + 1) % products.length);
   };
 
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + featuredProducts.length) % featuredProducts.length);
+    setCurrentSlide((prev) => (prev - 1 + products.length) % products.length);
   };
 
   return (
     <section className="px-4 py-6">
       {/* Main Grid with Two Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        {/* First Column: Total Sales, Analytics Dropdown, and Line Chart */}
-        <div className="p-6 bg-white rounded-xl shadow-lg relative">
-          <h2 className="text-3xl font-bold text-pink-600">$102.5M</h2>
-          <p className="text-gray-500 mt-1">Total Sales (All time)</p>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* First Column: Total Sales, Analytics Dropdown, and Line Chart (Takes 2/3 of the space) */}
+        <div className="lg:col-span-2 p-6 bg-white rounded-xl shadow-lg relative">
+          {/* Total Sales Section */}
+          <h2 className="text-3xl lg:text-4xl font-extrabold text-pink-500">$102.5M</h2>
+          <p className="text-gray-500 text-lg mt-1">Total Sales (All time)</p>
 
           {/* Time Range Dropdown for Analytics */}
           <div className="absolute top-0 right-0 p-4">
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="text-pink-500 hover:text-pink-700 focus:outline-none"
+                className="text-pink-600 hover:text-pink-800 focus:outline-none text-sm"
               >
                 Analytics &#9662;
               </button>
@@ -89,45 +129,16 @@ const DashboardStats = () => {
           </div>
 
           {/* Line Chart with X (Months) and Y (Money) Axes */}
-          <div className="w-full mt-6 h-40 relative">
-            <ResponsiveContainer width="100%" height={200}>
-              <LineChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                {/* Pink Line */}
-                <Line
-                  type="monotone"
-                  dataKey="earned"
-                  stroke="#fc5185"
-                  strokeWidth={2}
-                  isAnimationActive={true}
-                  animationDuration={2000}
-                  animationBegin={0}
-                  animationEasing="ease-in-out"
-                />
-                {/* Yellow Line */}
-                <Line
-                  type="monotone"
-                  dataKey="sales"
-                  stroke="#ffb800"
-                  strokeWidth={2}
-                  isAnimationActive={true}
-                  animationDuration={2000}
-                  animationBegin={500}
-                  animationEasing="ease-in-out"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+          <div className="w-full mt-6 flex justify-center">
+            <div className="w-full md:w-11/12 lg:w-10/12" style={{ height: '33vh' }}>
+              <Line data={chartData} options={chartOptions} />
+            </div>
           </div>
 
-          <div className="absolute bottom-4 right-4 text-gray-500">
-            {selectedRange}
-          </div>
+          <div className="absolute bottom-4 right-4 text-gray-500 text-sm">{selectedRange}</div>
         </div>
 
-        {/* Second Column: New Products & Featured Product Slider */}
+        {/* Second Column: New Products & Featured Product Slider (Takes 1/3 of the space) */}
         <div className="p-6 bg-white rounded-xl shadow-lg">
           {/* New Product Heading */}
           <h2 className="text-xl font-semibold text-white bg-pink-600 p-2 rounded-lg text-center mb-4">
@@ -137,35 +148,29 @@ const DashboardStats = () => {
           {/* Featured Product Slider */}
           <div className="relative overflow-hidden">
             <div
-              className="flex transition-transform duration-500 ease-in-out"
+              className="flex transition-transform duration-500 ease-in-out my-8"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {featuredProducts.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="min-w-full flex flex-col items-center justify-center"
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-24 h-24 object-contain"
-                  />
-                  <h3 className="text-lg font-bold mt-2">{product.name}</h3>
-                  <p className="text-pink-600 font-semibold">{product.price}</p>
+              {products.map((product) => (
+                <div key={product.id} className="min-w-full text-center">
+                  <img src={product.image} alt={product.name} className="mx-auto h-24 mb-4" />
+                  <h3 className="text-gray-700 font-bold">{product.name}</h3>
+                  <p className="text-pink-500">{product.price}</p>
                 </div>
               ))}
             </div>
+
             {/* Previous Slide Button */}
             <button
               onClick={handlePrevSlide}
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-pink-600 text-white rounded-full p-2 hover:bg-pink-700"
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 text-pink-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2"
             >
               &#9664;
             </button>
             {/* Next Slide Button */}
             <button
               onClick={handleNextSlide}
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-pink-600 text-white rounded-full p-2 hover:bg-pink-700"
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 text-pink-600 bg-gray-100 hover:bg-gray-200 rounded-full p-2"
             >
               &#9654;
             </button>
