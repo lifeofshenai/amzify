@@ -40,7 +40,13 @@ export const initiateShopifyAuth = async (
       rawRequest: req,
       rawResponse: res,
     });
-
+    console.log(redirectUrl);
+    if (!redirectUrl) {
+      throw new ErrorResponse(
+        HTTP_STATUS.BAD_REQUEST_400,
+        "Authentication URL not generated"
+      );
+    }
     sendSuccessResponse(res, HTTP_STATUS.OK_200, {redirectUrl}, `Success`);
   } catch (error: any) {
     ErrorLogger(error, res);
