@@ -10,6 +10,8 @@ const shopify = shopifyApi({
   //   privateAppStorefrontAccessToken: "",
   scopes: appConfig.shopify.scopes.split(","),
   hostName: appConfig.shopify.appUrl.replace(/https?:\/\//, ""),
+  //   hostName: "localhost:5000",
+  //   hostScheme: "http",
   apiVersion: ApiVersion.October23, // Use the latest stable version
   isEmbeddedApp: false,
   //   isCustomStoreApp:true
