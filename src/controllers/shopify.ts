@@ -65,22 +65,15 @@ export const handleShopifyCallback = async (
     });
 
     const {shop, accessToken, expires} = session;
-
+    const shopId = shop.split(".")[0];
     // Here, you can create or update the store in your database
-    let store = await Store.findOne({shopifyStoreId: shop});
+    let store = await Store.findOne({shopifyStoreId: shopId});
     const shopifyAccessToken = encrypt(accessToken!);
     if (!store) {
-      // If store doesn't exist, create a new entry
-      store = new Store({
-        vendor: req.user?._id,
-        platforms: [], // Assign relevant platforms
-        name: shop,
-        description: `Store connected via Shopify`,
-        shopifyStoreId: shop,
-        shopifyAccessToken,
-        isActive: true,
-      });
-      await store.save();
+      throw new ErrorResponse(
+        HTTP_STATUS.NOT_FOUND_404,
+        `Store:${shopId} does not exisist`
+      );
     } else {
       // Update existing store with new access token
       store.shopifyAccessToken = shopifyAccessToken!;
@@ -94,9 +87,6 @@ export const handleShopifyCallback = async (
       //   store,
     });
   } catch (error: any) {
-    res.status(error.statusCode || HTTP_STATUS.INTERNAL_SERVER_ERROR_500).json({
-      success: false,
-      error: error.message || "Internal Server Error",
-    });
+    ErrorLogger(error, res);
   }
 };
