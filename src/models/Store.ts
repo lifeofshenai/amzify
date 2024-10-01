@@ -46,9 +46,10 @@ const StoreSchema = new Schema<IStore>(
         "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
     },
     isActive: {type: Boolean, default: true},
-    shopifyStoreId: {type: String, required: true},
+    // status:{type:String, }
+    shopifyStoreId: {type: String, required: false},
     shopifyAccessToken: {type: String, required: false, select: false},
-    amazonStoreId: {type: String, required: true},
+    amazonStoreId: {type: String, required: false},
     amazonAccessToken: {type: String, required: false, select: false},
   },
   {

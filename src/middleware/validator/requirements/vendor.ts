@@ -12,6 +12,7 @@ const vendorRequirement = {
   createVendor: [
     body("firstName").isString().isLength({min: 3}),
     body("lastName").isString().optional({nullable: true}),
+    body("phoneNumber").isString().optional({nullable: true}),
     body("email").isEmail(),
     body("platforms")
       .isArray()
