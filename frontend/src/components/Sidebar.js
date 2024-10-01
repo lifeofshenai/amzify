@@ -27,7 +27,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`duration-175 linear fixed z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:bg-navy-800 dark:text-white ${
+      className={`duration-175 linear fixed z-50 flex min-h-full flex-col bg-base-100 rounded-lg pb-10 shadow-lg shadow-pink-500 shadow-white/5 transition-all dark:bg-navy-800 dark:text-white ${
         isSidebarOpen || window.innerWidth >= 1024
           ? "translate-x-0"
           : "-translate-x-96"
@@ -49,7 +49,7 @@ const Sidebar = () => {
       {/* Divider */}
       <div className="mt-14 mb-7 h-px bg-gray-300 dark:bg-white/30" />
       {/* Navigation Links */}
-      <ul className="mb-auto pt-1 px-5 rounded-lg shadow-lg">
+      <ul className="mb-auto pt-1 px-5">
         {links.map((link) => (
           <NavLink
             to={link.url}

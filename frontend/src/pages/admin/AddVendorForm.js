@@ -1,81 +1,48 @@
+// components/AddVendorForm.js
 import React from "react";
 import { AiOutlineMail, AiOutlineShop, AiOutlineUser } from "react-icons/ai";
 import { FaAmazon, FaShopify, FaTiktok } from "react-icons/fa";
 import { FiUpload } from "react-icons/fi";
+import FormInput from "../../components/FormInput";
 
 const AddVendorForm = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      {/* Container for the form */}
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-5xl p-10 space-y-6">
-        <h2 className="text-4xl font-bold text-center text-pink-600">
+    <div className="min-h-screen flex items-center justify-center p-6 lg:p-10">
+      {/* Reduced width and padding for the card */}
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-8 space-y-4">
+        <h2 className="text-3xl font-bold text-center text-pink-600">
           Register Vendor
         </h2>
 
-        <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Company Name */}
-          <div className="form-control relative">
-            <label className="label">
-              <span className="label-text">Company name</span>
-            </label>
-            <AiOutlineShop
-              className="absolute left-3 top-[60px] transform -translate-y-1/2 text-pink-600"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Company name"
-              className="input input-bordered pl-10 w-full"
-            />
-          </div>
+          <FormInput
+            label="Company name"
+            icon={AiOutlineShop}
+            placeholder="Company name"
+          />
 
           {/* First Name */}
-          <div className="form-control relative">
-            <label className="label">
-              <span className="label-text">First name</span>
-            </label>
-            <AiOutlineUser
-              className="absolute left-3 top-[60px] transform -translate-y-1/2 text-pink-600"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="First name"
-              className="input input-bordered pl-10 w-full"
-            />
-          </div>
+          <FormInput
+            label="First name"
+            icon={AiOutlineUser}
+            placeholder="First name"
+          />
 
           {/* Surname */}
-          <div className="form-control relative">
-            <label className="label">
-              <span className="label-text">Surname</span>
-            </label>
-            <AiOutlineUser
-              className="absolute left-3 top-[60px]  transform -translate-y-1/2 text-pink-600"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Surname"
-              className="input input-bordered pl-10 w-full"
-            />
-          </div>
+          <FormInput
+            label="Surname"
+            icon={AiOutlineUser}
+            placeholder="Surname"
+          />
 
           {/* Email Field */}
-          <div className="form-control relative">
-            <label className="label">
-              <span className="label-text">Email</span>
-            </label>
-            <AiOutlineMail
-              className="absolute left-3 top-[60px]  transform -translate-y-1/2 text-pink-600"
-              size={20}
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="input input-bordered pl-10 w-full"
-            />
-          </div>
+          <FormInput
+            label="Email"
+            type="email"
+            icon={AiOutlineMail}
+            placeholder="Email"
+          />
 
           {/* Choose Color Scheme */}
           <div className="form-control">
@@ -106,13 +73,14 @@ const AddVendorForm = () => {
             <textarea
               placeholder="Company Description"
               className="textarea textarea-bordered w-full"
+              rows={3} // Reduced number of rows for a more compact textarea
             ></textarea>
           </div>
 
           {/* Upload Company Logo */}
           <div className="form-control md:col-span-2">
             <label className="label">Upload Company Logo here</label>
-            <label className="w-full h-24 border-dashed border-2 border-gray-400 flex items-center justify-center cursor-pointer">
+            <label className="w-full h-16 border-dashed border-2 border-gray-400 flex items-center justify-center cursor-pointer">
               <FiUpload size={24} className="text-pink-600" />
               <input type="file" className="hidden" />
             </label>
@@ -123,9 +91,9 @@ const AddVendorForm = () => {
             <label className="label text-lg font-semibold text-gray-700 mb-4">
               Where would you like to sell?
             </label>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {/* Amzify */}
-              <label className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
+              <label className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-pink accent-pink-600 h-5 w-5 rounded"
@@ -136,7 +104,7 @@ const AddVendorForm = () => {
               </label>
 
               {/* Amazon */}
-              <label className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
+              <label className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-pink accent-pink-600 h-5 w-5 rounded"
@@ -146,7 +114,7 @@ const AddVendorForm = () => {
               </label>
 
               {/* Shopify */}
-              <label className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
+              <label className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-pink accent-pink-600 h-5 w-5 rounded"
@@ -156,7 +124,7 @@ const AddVendorForm = () => {
               </label>
 
               {/* TikTok */}
-              <label className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
+              <label className="flex items-center space-x-2 p-2 bg-gray-50 rounded-lg hover:bg-pink-50 transition">
                 <input
                   type="checkbox"
                   className="checkbox checkbox-pink accent-pink-600 h-5 w-5 rounded"
