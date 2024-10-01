@@ -41,7 +41,7 @@ export const initiateShopifyAuth = async (
       rawResponse: res,
     });
 
-    console.log(redirectUrl);
+    // console.log(redirectUrl);
     // if (!redirectUrl) {
     //   throw new ErrorResponse(
     //     HTTP_STATUS.BAD_REQUEST_400,
@@ -80,7 +80,7 @@ export const handleShopifyCallback = async (
       store.isActive = true;
       await store.save();
     }
-
+    // TODO redirect to success or failed page
     res.status(HTTP_STATUS.OK_200).json({
       success: true,
       message: "Shopify store connected successfully",
