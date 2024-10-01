@@ -18,10 +18,11 @@ const vendorRequirement = {
       .optional()
       .withMessage("Platforms must be an array of Platform IDs"),
     body("name").notEmpty().withMessage("Store name is required"),
-    body("description").notEmpty().withMessage("Description is required"),
-    body("shopifyStoreId")
-      .notEmpty()
-      .withMessage("Shopify Store ID is required"),
+    body("description").optional(),
+    // .withMessage("Description is required"),
+    body("shopifyStoreId").optional(),
+    // .withMessage("Shopify Store ID is required"),
+    body("amazonStoreId").notEmpty().withMessage("Amazon Store ID is required"),
     body("shopifyAccessToken").optional(),
     // Add more validations as needed
   ],

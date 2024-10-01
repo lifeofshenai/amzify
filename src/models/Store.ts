@@ -11,7 +11,10 @@ export interface IStore extends Document {
   logo: string;
   isActive: boolean;
   shopifyStoreId: string;
+  amazonStoreId: string;
   shopifyAccessToken: string;
+  amazonAccessToken: string;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -45,6 +48,8 @@ const StoreSchema = new Schema<IStore>(
     isActive: {type: Boolean, default: true},
     shopifyStoreId: {type: String, required: true},
     shopifyAccessToken: {type: String, required: false, select: false},
+    amazonStoreId: {type: String, required: true},
+    amazonAccessToken: {type: String, required: false, select: false},
   },
   {
     timestamps: true,
