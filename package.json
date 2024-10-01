@@ -1,29 +1,41 @@
 {
   "name": "amzify",
   "version": "1.0.0",
-  "main": "index.js",
   "repository": "https://github.com/mzahmerd/amzify.git",
   "author": "Muhammad Zubairu <muhdzubairuahmad@gmail.com>",
   "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node ./build/index.js",
+    "dev": "nodemon src/index.ts",
+    "build": "tsc",
+    "start-watch": "nodemon --delay 5000ms --exec npm run start"
+  },
   "devDependencies": {
-    "@types/bcrypt": "^5.1.1",
-    "@types/axios": "^1.7.7",
-    "@types/cors": "^2.8.5",
-    "@types/express": "^4.21.0",
-    "@types/node": "^20.14.6",
-    "@types/jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.7",
+    "@types/bcrypt": "^5.0.2",
+    "@types/cors": "^2.8.17",
+    "@types/crypto-js": "^4.2.2",
+    "@types/express": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "@types/node": "^22.7.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.2"
   },
   "dependencies": {
+    "@shopify/shopify-api": "^11.4.1",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.13",
+    "dotenv": "^16.4.5",
     "express": "^4.21.0",
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.6.4"
+    "mongoose": "^8.6.4",
+    "morgan": "^1.10.0",
+    "socket.io": "^4.8.0",
+    "winston": "^3.14.2"
   }
 }
