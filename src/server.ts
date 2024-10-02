@@ -7,6 +7,7 @@ import {Application} from "express";
 import AppConfig from "./config/appConfig";
 import MorganMiddleware from "./middleware/morgan";
 import errorHandler from "./middleware/handlers/error";
+// import "./scheduler";
 
 export function createServer(): Application {
   const app = express();
@@ -31,13 +32,7 @@ export function createServer(): Application {
   // app.use(compression());
   app.use(MorganMiddleware);
 
-  // app.use(expressfileupload());
-
   app.use(`/api/v${AppConfig.app.apiVersion}`, routesV1);
-
-  // app.get("/", (req, res, next) => {
-  //   return res.json({hello: "hy"});
-  // });
 
   app.use(errorHandler);
 

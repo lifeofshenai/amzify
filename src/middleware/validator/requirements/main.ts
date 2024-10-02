@@ -2,6 +2,11 @@ import {body} from "express-validator";
 import {ROLES} from "../../../utils/constants";
 
 const mainRequirement = {
+  createPlatform: [
+    body("name").isString(),
+    body("url").optional().isString(),
+    body("description").optional().isString(),
+  ],
   signup: [
     body("password")
       .isString()

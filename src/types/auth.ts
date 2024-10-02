@@ -5,9 +5,10 @@ export type LoginType = {
 };
 export type SignUpType = {
   email: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   password: string;
   firstName: string;
   lastName: string;
   role: string;
+  isActive?: boolean;
 };

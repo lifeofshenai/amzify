@@ -30,9 +30,14 @@ export interface IUser extends Document {
 
 const UserSchema = new Schema<IUser>(
   {
-    firstName: {type: String, required: false},
-    lastName: {type: String, required: false},
-    pictureUrl: {type: String, required: false},
+    firstName: {type: String, required: true},
+    lastName: {type: String, required: true},
+    pictureUrl: {
+      type: String,
+      required: false,
+      default:
+        "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
+    },
     email: {
       type: String,
       required: [true, "email is required"],
@@ -53,10 +58,10 @@ const UserSchema = new Schema<IUser>(
       required: [true, "Password is required"],
       minlength: [8, "password must be at least 8 character"],
     },
-    phoneNumber: {type: String, required: true, unique: true, index: true},
+    phoneNumber: {type: String, required: false},
     deviceToken: {type: String},
 
-    isActive: {type: Boolean, default: true},
+    isActive: {type: Boolean, default: false},
 
     lastLogin: {type: Date, default: Date.now},
     createdAt: {type: Date, default: Date.now},
@@ -76,7 +81,7 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-UserSchema.index({email: 1, phoneNumber: 1});
+UserSchema.index({email: 1});
 
 // Pre-save hook to hash password and transactionPin
 UserSchema.pre<IUser>("save", async function (next: any) {
@@ -114,7 +119,7 @@ UserSchema.methods.matchPassword = async function (password: string) {
   return await bcrypt.compare(password, this.password);
 };
 
-// Generate and hash password
+// Generate and hash password reset token
 UserSchema.methods.getResetPasswordToken = async function (): Promise<string> {
   // generate token
   const resetToken = crypto.randomBytes(20).toString("hex");
