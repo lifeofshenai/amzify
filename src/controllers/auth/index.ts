@@ -23,6 +23,20 @@ export const currentUser = async (
     return sendErrorResponse(res, error);
   }
 };
+
+export const logout = async (
+  req: Request | any,
+  res: Response
+): Promise<any> => {
+  try {
+    const {user}: any = req;
+
+    res.cookie("token", "none").sendStatus(HTTP_STATUS.OK_200);
+  } catch (error) {
+    return sendErrorResponse(res, error);
+  }
+};
+
 export const login = async (
   req: Request | any,
   res: Response

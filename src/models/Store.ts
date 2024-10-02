@@ -1,17 +1,20 @@
 import {model, Schema, Document} from "mongoose";
 import collections from "../utils/collections";
-import {IPlatform} from "./Platform";
+import {platforms} from "../utils/constants";
 
 export interface IStore extends Document {
   vendor: Schema.Types.ObjectId;
-  platforms: Schema.Types.ObjectId[] | IPlatform[];
+  platforms: string[];
   name: string;
   description: string;
   url: string;
   logo: string;
   isActive: boolean;
   shopifyStoreId: string;
+  amazonStoreId: string;
   shopifyAccessToken: string;
+  amazonAccessToken: string;
+
   createdAt: Date;
   updatedAt: Date;
 }
@@ -26,9 +29,9 @@ const StoreSchema = new Schema<IStore>(
     platforms: {
       type: [
         {
-          type: Schema.Types.ObjectId,
-          ref: collections.platforms,
-          required: false,
+          type: String,
+          enum: Object.values(platforms),
+          required: true,
         },
       ],
       default: [],
@@ -43,8 +46,11 @@ const StoreSchema = new Schema<IStore>(
         "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
     },
     isActive: {type: Boolean, default: true},
-    shopifyStoreId: {type: String, required: true},
+    // status:{type:String, }
+    shopifyStoreId: {type: String, required: false},
     shopifyAccessToken: {type: String, required: false, select: false},
+    amazonStoreId: {type: String, required: false},
+    amazonAccessToken: {type: String, required: false, select: false},
   },
   {
     timestamps: true,

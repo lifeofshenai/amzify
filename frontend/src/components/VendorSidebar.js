@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { links } from "../constants/data";
+import { vendorLinks } from "../constants/data";
 import { HiX } from "react-icons/hi";
-import { useSidebarContext } from "../context/SidebarContext";
+import { useGlobalContext } from "../context";
 
-const Sidebar = () => {
-  const { isSidebarOpen, closeSidebar, openSidebar } = useSidebarContext();
+const VendorSidebar = () => {
+  const { isSidebarOpen, closeSidebar, openSidebar } = useGlobalContext();
 
   // Add a hook to handle sidebar visibility on window resize
   useEffect(() => {
@@ -27,7 +27,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`duration-175 linear fixed z-50 flex min-h-full flex-col bg-base-100 rounded-lg pb-10 shadow-lg shadow-pink-500 shadow-white/5 transition-all dark:bg-navy-800 dark:text-white ${
+      className={`duration-175 linear fixed z-50 flex min-h-full flex-col bg-white pb-10 shadow-2xl shadow-white/5 transition-all dark:bg-navy-800 dark:text-white ${
         isSidebarOpen || window.innerWidth >= 1024
           ? "translate-x-0"
           : "-translate-x-96"
@@ -49,15 +49,15 @@ const Sidebar = () => {
       {/* Divider */}
       <div className="mt-14 mb-7 h-px bg-gray-300 dark:bg-white/30" />
       {/* Navigation Links */}
-      <ul className="mb-auto pt-1 px-5">
-        {links.map((link) => (
-          <NavLink
+      <ul className="pt-1 px-5 rounded-lg shadow-lg mb-auto h-screen">
+        {vendorLinks.map((link) => (
+          <NavLink 
             to={link.url}
             key={link.id}
             // Add `end` to make it match exact paths only
-            end={link.url === "/admin"} // Only add `end` for the "/admin" link
+            end={link.url === "/vendor"} // Only add `end` for the "/vendor" link
             className={({ isActive }) =>
-              `flex items-center p-2 mb-2 rounded-lg ${
+              `flex items-center p-2 mb-4 rounded-lg ${
                 isActive
                   ? "bg-pink-700 text-white"
                   : "hover:bg-gray-700 hover:text-white"
@@ -73,4 +73,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default VendorSidebar;
