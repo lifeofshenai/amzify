@@ -1,32 +1,75 @@
-// components/StatsBar.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaClock,
-  FaTrash,
   FaUserCheck,
   FaUsers,
   FaUserTimes,
 } from "react-icons/fa";
-import { DUMMY_DATA } from "../constants/data";
+import axiosInstance from "../services/instantAxios"; 
 import VendorCard from "./VendorCard";
 import VendorTable from "./VendorTable";
+import LoadingSpinner from "./LoadingSpinner";
+import { toast } from "react-toastify";
+
 
 const StatsBar = () => {
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all-vendors");
+  const [vendorsData, setVendorsData] = useState({
+    allVendors: [],
+    activeVendors: [],
+    suspendedVendors: [],
+    awaitingApproval: [],
+    deletedVendors: [],
+  });
+
+  // Fetch vendor data from server
+  useEffect(() => {
+    const fetchVendors = async () => {
+      try {
+        const response = await axiosInstance.get("/vendors");
+        const stores = response.data.data.stores;
+
+        // Organize vendors into different categories
+        const allVendors = stores;
+        const activeVendors = stores.filter((store) => store.vendor.isActive);
+        const suspendedVendors = stores.filter(
+          (store) => !store.vendor.isActive && store.isActive
+        );
+        const awaitingApproval = stores.filter((store) => !store.isActive);
+
+        setVendorsData({
+          allVendors,
+          activeVendors,
+          suspendedVendors,
+          awaitingApproval,
+        });
+
+        setLoading(false);
+
+      } catch (error) {
+        toast.error("Failed to fetch vendor details.");
+        console.error("Error fetching vendors:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchVendors();
+  }, []);
 
   // Function to return data based on the active tab
   const getTableData = () => {
     switch (activeTab) {
       case "all-vendors":
-        return DUMMY_DATA.allVendors;
+        return vendorsData.allVendors;
       case "active-vendors":
-        return DUMMY_DATA.activeVendors;
+        return vendorsData.activeVendors;
       case "suspended-vendors":
-        return DUMMY_DATA.suspendedVendors;
+        return vendorsData.suspendedVendors;
       case "awaiting-approval":
-        return DUMMY_DATA.awaitingApproval;
+        return vendorsData.awaitingApproval;
       case "deleted-vendors":
-        return DUMMY_DATA.deletedVendors;
+        return vendorsData.deletedVendors;
       default:
         return [];
     }
@@ -34,52 +77,46 @@ const StatsBar = () => {
 
   return (
     <div>
-      <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <VendorCard
-          icon={<FaUsers className="text-3xl text-pink-700" />}
-          title="All Vendors"
-          count={DUMMY_DATA.allVendors.length}
-          active={activeTab === "all-vendors"}
-          onClick={() => setActiveTab("all-vendors")}
-          borderColor="border-pink-700"
-        />
-        <VendorCard
-          icon={<FaUserCheck className="text-3xl text-green-500" />}
-          title="Active Vendors"
-          count={DUMMY_DATA.activeVendors.length}
-          active={activeTab === "active-vendors"}
-          onClick={() => setActiveTab("active-vendors")}
-          borderColor="border-green-500"
-        />
-        <VendorCard
-          icon={<FaUserTimes className="text-3xl text-red-500" />}
-          title="Suspended Vendors"
-          count={DUMMY_DATA.suspendedVendors.length}
-          active={activeTab === "suspended-vendors"}
-          onClick={() => setActiveTab("suspended-vendors")}
-          borderColor="border-red-500"
-        />
-        <VendorCard
-          icon={<FaClock className="text-3xl text-yellow-500" />}
-          title="Awaiting Approval"
-          count={DUMMY_DATA.awaitingApproval.length}
-          active={activeTab === "awaiting-approval"}
-          onClick={() => setActiveTab("awaiting-approval")}
-          borderColor="border-yellow-500"
-        />
-        <VendorCard
-          icon={<FaTrash className="text-3xl text-gray-500" />}
-          title="Deleted Vendors"
-          count={DUMMY_DATA.deletedVendors.length}
-          active={activeTab === "deleted-vendors"}
-          onClick={() => setActiveTab("deleted-vendors")}
-          borderColor="border-gray-500"
-        />
+      <div className="w-full flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <VendorCard
+            icon={<FaUsers className="text-3xl text-pink-700" />}
+            title="All Vendors"
+            count={vendorsData.allVendors.length}
+            active={activeTab === "all-vendors"}
+            onClick={() => setActiveTab("all-vendors")}
+            borderColor="border-pink-700"
+          />
+          <VendorCard
+            icon={<FaUserCheck className="text-3xl text-green-500" />}
+            title="Active Vendors"
+            count={vendorsData.activeVendors.length}
+            active={activeTab === "active-vendors"}
+            onClick={() => setActiveTab("active-vendors")}
+            borderColor="border-green-500"
+          />
+          <VendorCard
+            icon={<FaUserTimes className="text-3xl text-red-500" />}
+            title="Suspended Vendors"
+            count={vendorsData.suspendedVendors.length}
+            active={activeTab === "suspended-vendors"}
+            onClick={() => setActiveTab("suspended-vendors")}
+            borderColor="border-red-500"
+          />
+          <VendorCard
+            icon={<FaClock className="text-3xl text-yellow-500" />}
+            title="Awaiting Approval"
+            count={vendorsData.awaitingApproval.length}
+            active={activeTab === "awaiting-approval"}
+            onClick={() => setActiveTab("awaiting-approval")}
+            borderColor="border-yellow-500"
+          />
+        </div>
       </div>
 
       {/* Table of Vendors based on active tab */}
       <div className="mt-8">
-        <VendorTable data={getTableData()} />
+        {loading ? <LoadingSpinner /> : <VendorTable data={getTableData()} />}
       </div>
     </div>
   );
