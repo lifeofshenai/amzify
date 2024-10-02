@@ -1,11 +1,11 @@
-// context/AppContext.js
+// context/SidebarContext.js
 import { createContext, useContext, useState } from "react";
 
-const GlobalContext = createContext();
+const SidebarContext = createContext();
 
-export const useGlobalContext = () => useContext(GlobalContext);
+export const useSidebarContext = () => useContext(SidebarContext);
 
-const AppContext = ({ children }) => {
+const SidebarProvider = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const openSidebar = () => {
@@ -16,12 +16,12 @@ const AppContext = ({ children }) => {
   };
 
   return (
-    <GlobalContext.Provider
+    <SidebarContext.Provider
       value={{ openSidebar, closeSidebar, isSidebarOpen }}
     >
       {children}
-    </GlobalContext.Provider>
+    </SidebarContext.Provider>
   );
 };
 
-export default AppContext;
+export default SidebarProvider;
