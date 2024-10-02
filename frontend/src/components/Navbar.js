@@ -1,122 +1,142 @@
-import React, { useState } from "react";
-import {
-  FaBell,
-  FaBars,
-  FaFacebook,
-  FaTwitter,
-  FaLinkedin,
-  FaInstagram,
-} from "react-icons/fa";
-import { useGlobalContext } from "../context";
-import { user } from "../constants/data";
+import { FaSearch, FaAlignJustify } from "react-icons/fa";
+import { IoMdNotificationsOutline } from "react-icons/io";
+import Dropdown from "../components/dropdown";
+import { useSidebarContext } from "../context/SidebarContext";
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react"; // Import useState for handling logout state
 
+const Navbar = () => {
+  const { openSidebar } = useSidebarContext();
+  const { user, logout } = useAuth();
+  const [logoutLoading, setLogoutLoading] = useState(false); // Logout loading state
 
+  // Handle logout functionality
+  const handleLogout = async () => {
+    if (logoutLoading) return; // Prevent multiple clicks if already logging out
+    setLogoutLoading(true); // Set loading state to true
 
-const Navbar = ({ onToggleSidebar }) => {
-  const [isNotificationOpen, setNotificationOpen] = useState(false);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const { toggleSidebar } = useGlobalContext();
-
+    try {
+      await logout(); // Call the logout function
+    } catch (error) {
+      console.error("Error during logout:", error); // Handle any error during logout
+    } finally {
+      setLogoutLoading(false); // Reset the loading state after logout completes
+    }
+  };
 
   return (
-    <div className="navbar bg-base-100 shadow-lg p-4">
-      <div className="flex-1">
+    <nav
+      className={`navbar sticky top-4 z-40 flex justify-stretch items-center mt-2 w-full bg-base-100 rounded-lg bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]`}
+    >
+      <div className="relative mt-[3px] h-[65px] flex flex-grow items-center justify-around gap-2 rounded-full bg-base-100 px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[1080px] md:flex-grow-0 md:gap-1 xl:w-[1080px] xl:gap-2">
         {/* Sidebar Toggle Button */}
-        <button onClick={toggleSidebar} className="btn btn-ghost lg:hidden">
-          <FaBars className="text-xl" />
-        </button>
-        <div className="form-control hidden lg:block">
+        <span
+          className="flex transition ease-in-out animate-bounce cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
+          onClick={openSidebar}
+        >
+          <FaAlignJustify className="h-5 w-5" />
+        </span>
+
+        {/* Search Bar */}
+        <div className="flex border h-full items-center rounded-full bg-light text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]">
+          <p className="pl-3 pr-2 text-xl">
+            <FaSearch className="h-4 w-4 text-gray-400 dark:text-white" />
+          </p>
           <input
             type="text"
-            placeholder="Search"
-            className="input input-bordered rounded-full"
+            placeholder="Search..."
+            className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-gray-400 dark:bg-navy-900 dark:text-white dark:placeholder:!text-white sm:w-fit"
           />
         </div>
-      </div>
-      <div className="flex-none gap-2">
-        {/* Notification Bell */}
-        <div className="relative">
-          <button
-            onClick={() => setNotificationOpen(true)}
-            className="btn btn-ghost"
-          >
-            <FaBell className="text-xl" />
-          </button>
-          {/* Notification Modal */}
-          <input
-            type="checkbox"
-            id="notification-modal"
-            className="modal-toggle"
-            checked={isNotificationOpen}
-            onChange={() => setNotificationOpen(!isNotificationOpen)}
-          />
-          <label htmlFor="notification-modal" className="modal cursor-pointer">
-            <label className="modal-box relative" htmlFor="">
-              <h2 className="text-lg font-bold">Notifications</h2>
-              <p>No new notifications</p>
-              <div className="modal-action">
-                <label htmlFor="notification-modal" className="btn">
-                  Close
-                </label>
-              </div>
-            </label>
-          </label>
-        </div>
 
-        {/* User Profile */}
-        <div className="relative">
-          <button
-            onClick={() => setDropdownOpen(!isDropdownOpen)}
-            className="btn btn-ghost rounded-full"
-          >
-            <img
-              src={user.profileImage}
-              alt="Profile"
-              className="w-10 h-10 rounded"
-            />
-          </button>
-          <span className="ml-2">{user.name}</span>
-          <span className="ml-1 text-sm text-gray-500">{user.role}</span>
-
-          {/* Dropdown Menu */}
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 w-48 p-2 bg-white shadow-lg rounded-lg z-10">
-              <p className="hover:bg-gray-100 p-2 rounded">{user.name}</p>
-              <p className="hover:bg-gray-100 p-2 rounded">{user.email}</p>
-              <p className="hover:bg-gray-100 p-2 rounded">{user.phone}</p>
-              <hr className="my-2" />
-              <div className="flex justify-around mb-2">
-                <a
-                  href={user.socials.facebook}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <FaFacebook className="text-xl text-blue-600" />
-                </a>
-                <a href={user.socials.twitter} target="_blank" rel="noreferrer">
-                  <FaTwitter className="text-xl text-blue-400" />
-                </a>
-                <a
-                  href={user.socials.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <FaLinkedin className="text-xl text-blue-500" />
-                </a>
-                <a
-                  href={user.socials.instagram}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <FaInstagram className="text-xl text-pink-600" />
-                </a>
+        {/* Notification Icon */}
+        <Dropdown
+          button={
+            <IoMdNotificationsOutline className="h-5 w-5 rounded-lg shadow-lg text-gray-600 dark:text-white" />
+          }
+          children={
+            <div className="flex w-[360px] flex-col gap-3 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none sm:w-[460px]">
+              {/* Notification Content */}
+              <div className="flex items-center justify-between">
+                <p className="text-base font-bold text-navy-700 dark:text-white">
+                  Notification
+                </p>
+                <p className="text-sm font-bold text-navy-700 dark:text-white">
+                  Mark all read
+                </p>
               </div>
-              <p className="hover:bg-gray-100 p-2 rounded">Logout</p>
+              {/* More Notification Items */}
             </div>
-          )}
-        </div>
+          }
+          classNames={"py-2 top-4 -left-[230px] md:-left-[440px] w-max"}
+        />
+
+        {/* User Profile Section */}
+        <Dropdown
+          button={
+            <div className="flex items-center space-x-3">
+              {/* Profile Picture */}
+              <img
+                className="rounded-full btn btn-ghost btn-circle avatar"
+                src={
+                  user?.pictureUrl ||
+                  "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png"
+                }
+                alt={user?.firstName || "User Avatar"}
+              />
+
+              {/* User Info */}
+              <div className="text-left">
+                <p className="font-semibold text-gray-800 dark:text-white">
+                  {user?.firstName} {user?.lastName} {/* Full name */}
+                </p>
+                <p className="text-xs font-semibold text-pink-700 dark:text-pink-500">
+                  {user?.role?.toUpperCase()} {/* Display role in uppercase */}
+                </p>
+              </div>
+            </div>
+          }
+          children={
+            <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
+              <div className="p-4">
+                <p className="text-sm font-bold text-navy-700 dark:text-white">
+                  👋 Hey, {user?.firstName || "Guest"}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-300">
+                  {user?.email || "example@email.com"}
+                </p>
+              </div>
+              <div className="h-px w-full bg-gray-200 dark:bg-white/20" />
+              <div className="flex flex-col p-4">
+                <a
+                  href=" "
+                  className="text-sm text-gray-800 dark:text-white hover:dark:text-white"
+                >
+                  Profile Settings
+                </a>
+                <a
+                  href=" "
+                  className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white"
+                >
+                  Newsletter Settings
+                </a>
+                <button
+                  onClick={handleLogout}
+                  disabled={logoutLoading} // Disable button during logout process
+                  className={`mt-3 btn btn-sm btn-primary text-sm font-medium ${
+                    logoutLoading ? "btn-disabled" : "text-red-500"
+                  } transition duration-200 ease-out hover:text-red-500 hover:ease-in`}
+                >
+                  {logoutLoading ? "Logging out..." : "Log Out"}{" "}
+                  {/* Show loading text when logging out */}
+                </button>
+              </div>
+            </div>
+          }
+          classNames={"py-2 top-8 -left-[180px] w-max"}
+        />
       </div>
-    </div>
+    </nav>
   );
 };
 
