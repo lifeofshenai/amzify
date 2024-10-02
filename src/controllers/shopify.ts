@@ -33,22 +33,14 @@ export const initiateShopifyAuth = async (
     if (!shop)
       throw new ErrorResponse(HTTP_STATUS.BAD_REQUEST_400, "Invalid store URL");
 
-    const redirectUrl = await shopify.auth.begin({
+    await shopify.auth.begin({
+      // this redirect automatically
       callbackPath: `/api/v${appConfig.app.apiVersion}/shopify/callback`,
       shop,
       isOnline: false,
       rawRequest: req,
       rawResponse: res,
     });
-
-    // console.log(redirectUrl);
-    // if (!redirectUrl) {
-    //   throw new ErrorResponse(
-    //     HTTP_STATUS.BAD_REQUEST_400,
-    //     "Authentication URL not generated"
-    //   );
-    // }
-    // sendSuccessResponse(res, HTTP_STATUS.OK_200, {redirectUrl}, `Success`);
   } catch (error: any) {
     ErrorLogger(error, res);
   }

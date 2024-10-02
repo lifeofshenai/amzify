@@ -1,10 +1,10 @@
 import {model, Schema, Document} from "mongoose";
 import collections from "../utils/collections";
-import {IPlatform} from "./Platform";
+import {platforms} from "../utils/constants";
 
 export interface IStore extends Document {
   vendor: Schema.Types.ObjectId;
-  platforms: Schema.Types.ObjectId[] | IPlatform[];
+  platforms: string[];
   name: string;
   description: string;
   url: string;
@@ -29,9 +29,9 @@ const StoreSchema = new Schema<IStore>(
     platforms: {
       type: [
         {
-          type: Schema.Types.ObjectId,
-          ref: collections.platforms,
-          required: false,
+          type: String,
+          enum: Object.values(platforms),
+          required: true,
         },
       ],
       default: [],
