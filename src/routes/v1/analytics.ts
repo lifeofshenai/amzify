@@ -12,6 +12,13 @@ router.use(authenticate);
 // router.use(authorize([ROLES.admin]));
 
 /**
+ * @route GET /api/v1/analytics
+ * @desc Get all analytics
+ * @access Admin
+ */
+router.get("/", AnalyticsController.getAnalytics);
+
+/**
  * @route GET /api/v1/analytics/gmv
  * @desc Get Total Gross Merchandise Volume (GMV)
  * @access Admin

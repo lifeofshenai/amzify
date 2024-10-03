@@ -177,6 +177,61 @@ class AnalyticsController {
       ErrorLogger(error, res);
     }
   }
+
+  /**
+   * Get Revenue per Platform
+   */
+  async getAnalytics(req: Request, res: Response): Promise<void> {
+    try {
+      const {startDate, endDate, platforms: platformFilter} = req.query;
+      const rate = 10; // take rate default to 10%
+      const platformsArray = platformFilter
+        ? (platformFilter as string).split(",")
+        : undefined;
+
+      const perPlatformRevenueData =
+        await AnalyticsService.getRevenuePerPlatform(
+          rate,
+          platformFilter ? (platformFilter as string).split(",") : undefined
+        );
+      const totalGMV = await AnalyticsService.getTotalGMV(platformsArray);
+      const totalRevenue = await AnalyticsService.getTotalRevenue(
+        rate,
+        platformsArray
+      );
+      const sales = await AnalyticsService.getDailySales(
+        startDate ? new Date(startDate as string) : undefined,
+        endDate ? new Date(endDate as string) : undefined,
+        platformsArray
+      );
+      const perVendorRevenueData = await AnalyticsService.getRevenuePerVendor(
+        rate,
+        platformsArray
+      );
+      const topProducts = await AnalyticsService.getTopSellingProducts(
+        20,
+        platformsArray
+      );
+      const status = await AnalyticsService.getStoreStatus(platformsArray);
+
+      sendSuccessResponse(
+        res,
+        HTTP_STATUS.OK_200,
+        {
+          perPlatformRevenueData,
+          totalGMV,
+          totalRevenue,
+          sales,
+          perVendorRevenueData,
+          topProducts,
+          status,
+        },
+        "Analytics retrieved successfully"
+      );
+    } catch (error: any) {
+      ErrorLogger(error, res);
+    }
+  }
 }
 
 export default new AnalyticsController();
