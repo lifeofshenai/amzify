@@ -17,14 +17,26 @@ export const authenticate = async (
   next: NextFunction
 ): Promise<any> => {
   const authorization = String(req.headers.authorization);
-  if (!authorization || !authorization.includes("Bearer")) {
+  let token;
+  if (authorization && authorization.includes("Bearer")) {
+    token = authorization?.slice(7);
+  } else if (req.cookies) {
+    // get token from cookies
+    console.log(req.cookies);
+    token = req.cookies?.authToken;
+  } else {
+    return sendErrorResponse(
+      res,
+      new ErrorResponse(HTTP_STATUS.UNAUTHORIZED_401, "Provide a token")
+    );
+  }
+  if (!token) {
     return sendErrorResponse(
       res,
       new ErrorResponse(HTTP_STATUS.UNAUTHORIZED_401, "Provide a token")
     );
   }
 
-  const token = authorization?.slice(7);
   try {
     const payload = await JWT.verifyToken(token);
     if (!payload) {

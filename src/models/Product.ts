@@ -43,5 +43,7 @@ const ProductSchema = new Schema<IProduct>(
   }
 );
 
-// ProductSchema.index([{platform: 1}, {platformProductId: 1}], {unique: true});
+// Create a unique compound index on platform and platformProductId
+ProductSchema.index({platform: 1, platformProductId: 1}, {unique: true});
+
 export const Product = model<IProduct>(collections.products, ProductSchema);

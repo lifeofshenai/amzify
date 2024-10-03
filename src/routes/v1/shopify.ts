@@ -16,7 +16,8 @@ const router: Router = Router();
 // Route to initiate Shopify OAuth
 router.get(
   "/auth",
-  Validate(Requirements.validateShopifyAuth),
+  // Validate(Requirements.validateShopifyAuth),
+  // authenticate,
   initiateShopifyAuth
 );
 

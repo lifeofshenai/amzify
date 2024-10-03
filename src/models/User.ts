@@ -61,7 +61,7 @@ const UserSchema = new Schema<IUser>(
     phoneNumber: {type: String, required: false},
     deviceToken: {type: String},
 
-    isActive: {type: Boolean, default: false},
+    isActive: {type: Boolean, default: true},
 
     lastLogin: {type: Date, default: Date.now},
     createdAt: {type: Date, default: Date.now},

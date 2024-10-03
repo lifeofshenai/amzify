@@ -83,7 +83,7 @@ export const updateVendor = async (
 };
 
 /**
- * Endpoint to synchronize products from Shopify
+ * Endpoint to synchronize store products
  */
 export const syncProducts = async (
   req: Request | any,
@@ -91,13 +91,24 @@ export const syncProducts = async (
 ): Promise<any> => {
   try {
     const {id} = req.params; // Store ID
-    const products = await VendorService.syncProducts(id);
-    sendSuccessResponse(
-      res,
-      HTTP_STATUS.OK_200,
-      {products},
-      "Products synchronized successfully"
-    );
+    const {products, message} = await VendorService.syncProducts(id);
+    sendSuccessResponse(res, HTTP_STATUS.OK_200, {products}, message);
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+/**
+ * Endpoint to synchronize store products
+ */
+export const syncOrders = async (
+  req: Request | any,
+  res: Response
+): Promise<any> => {
+  try {
+    const {id} = req.params; // Store ID
+    const {orders, message} = await VendorService.syncOrders(id);
+    sendSuccessResponse(res, HTTP_STATUS.OK_200, {orders}, message);
   } catch (error) {
     sendErrorResponse(res, error);
   }
