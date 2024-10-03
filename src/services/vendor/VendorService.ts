@@ -132,78 +132,50 @@ class VendorService {
     }
   }
 
-  /**
-   * Synchronize products from Shopify to your database
-   * @param storeId - Store ID
-   */
-  async syncProducts(storeId: string): Promise<any> {
-    try {
-      const store = await Store.findById(storeId).select("+shopifyAccessToken");
-      if (!store) {
-        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
+  async synchronizeData(storeId: string, platformsToSync: string[]) {
+    for (const platform of platformsToSync) {
+      try {
+        const platformService =
+          PlatformServiceFactory.getPlatformService(platform);
+        await platformService.fetchProducts(storeId);
+        await platformService.fetchOrders(storeId);
+        // Add more synchronization methods if needed
+      } catch (error) {
+        console.error(
+          `Error synchronizing data for platform ${platform}:`,
+          error
+        );
+        // Handle errors as needed
       }
-      const accessToken = decrypt(store.shopifyAccessToken);
-      const shopifyService = new ShopifyService(
-        store.shopifyStoreId,
-        accessToken
-      );
-
-      const products = await shopifyService.fetchProducts();
-
-      // store products in your database
-      await Product.insertMany(
-        products.map((product: any) => ({
-          store: store._id,
-          platform: platforms.shopify,
-          platformProductId: product.id,
-          name: product.title,
-          description: product.body_html,
-          price: product.variants[0].price,
-          inventory: product.variants[0].inventory_quantity,
-          image: product.images[0]?.src || "",
-        })),
-        {lean: true}
-      );
-
-      return products;
-    } catch (error: any) {
-      throw error;
     }
   }
 
-  async fetchOrders(storeId: string): Promise<any> {
+  async syncProducts(
+    storeId: string
+  ): Promise<{products: IProduct[]; message: string}> {
     try {
-      const store = await Store.findById(storeId).select("+shopifyAccessToken");
+      const store = await Store.findById(storeId).select("+credentials");
       if (!store) {
         throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
       }
 
-      const accessToken = decrypt(store.shopifyAccessToken);
-      const shopifyService = new ShopifyService(
-        store.shopifyStoreId,
-        accessToken
-      );
-      const orders = await shopifyService.fetchOrders();
+      const {platforms, credentials} = store;
 
-      // Optionally, store orders in your database
-      // Example:
-      // await Order.insertMany(orders.map(order => ({
-      //   store: store._id,
-      //   shopifyOrderId: order.id,
-      //   totalPrice: order.total_price,
-      //   createdAt: order.created_at,
-      //   lineItems: order.line_items.map(item => ({
-      //     name: item.name,
-      //     quantity: item.quantity,
-      //     price: item.price,
-      //   })),
-      // })));
-
-      return orders;
+      for (const platform of platforms) {
+        const platformCredentials = credentials[platform];
+        if (platformCredentials) {
+          const platformService =
+            PlatformServiceFactory.getPlatformService(platform);
+          const products = await platformService.fetchProducts(storeId);
+          console.log(products);
+        }
+      }
+      const products = await Product.find({store: storeId});
+      return {products, message: "Products synchronized successfully"};
     } catch (error: any) {
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
-        error.message
+        `Sync Products error: ${error.message}`
       );
     }
   }
