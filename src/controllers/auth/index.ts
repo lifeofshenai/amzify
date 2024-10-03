@@ -43,7 +43,7 @@ export const login = async (
 ): Promise<any> => {
   try {
     const payload: LoginType = req.body;
-    const {token, user, err} = await AuthService.login(payload);
+    const {token, user, store, err} = await AuthService.login(payload);
     if (err) throw err;
 
     if (payload.deviceToken) user.deviceToken = payload.deviceToken;
@@ -54,7 +54,7 @@ export const login = async (
     sendSuccessResponse(
       res,
       HTTP_STATUS.OK_200,
-      {user, token},
+      {user, store, token},
       "Logged in successfully"
     );
   } catch (error) {
