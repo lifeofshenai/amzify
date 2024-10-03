@@ -6,8 +6,7 @@ const vendorRequirement = {
     query("storeId")
       // .isURL()
       // .withMessage("Valid store URL is required")
-      .notEmpty()
-      .withMessage("Store ID cannot be empty"),
+      .optional(),
   ],
   createVendor: [
     body("firstName").isString().isLength({min: 3}),
@@ -23,8 +22,8 @@ const vendorRequirement = {
     // .withMessage("Description is required"),
     body("shopifyStoreId").optional(),
     // .withMessage("Shopify Store ID is required"),
-    body("amazonStoreId").notEmpty().withMessage("Amazon Store ID is required"),
-    body("shopifyAccessToken").optional(),
+    body("amazonStoreId").optional(),
+    // body("shopifyAccessToken").optional(),
     // Add more validations as needed
   ],
 };

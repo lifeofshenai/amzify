@@ -8,6 +8,8 @@ import PlatformServiceFactory from "../platforms/PlatformServiceFactory";
 import {decrypt, encrypt} from "../../utils/encryption";
 import {platforms, ROLES} from "../../utils/constants";
 import mongoose from "mongoose";
+import {IProduct, Product} from "../../models/Product";
+import {IOrder, Order} from "../../models/Order";
 
 class VendorService {
   /**
@@ -16,9 +18,14 @@ class VendorService {
    * @param payload - Vendor details
    */
   async createVendor(
-    payload: Partial<IUser> & Partial<IStore>
+    payload: Partial<IUser> &
+      Partial<IStore> & {
+        shopifyStoreId: string;
+        amazonStoreId: string;
+      }
   ): Promise<IStore> {
     const session = await mongoose.startSession();
+
     try {
       await session.startTransaction();
       const user = new User({
@@ -31,31 +38,31 @@ class VendorService {
 
       // Prepare credentials object
       const credentials: {
-        [key: string]: {storeId: string; accessToken: string};
+        [key: string]: {storeId: string; accessToken?: string};
       } = {};
 
-      // payload.platforms?.forEach((platform) => {
-      //   if (
-      //     platform === platforms.shopify &&
-      //     payload.shopifyStoreId &&
-      //     payload.shopifyAccessToken
-      //   ) {
-      //     credentials[platform] = {
-      //       storeId: payload.shopifyStoreId,
-      //       accessToken: encrypt(payload.shopifyAccessToken),
-      //     };
-      //   }
-      //   if (
-      //     platform === platforms.amazon &&
-      //     payload.amazonStoreId &&
-      //     payload.amazonAccessToken
-      //   ) {
-      //     credentials[platform] = {
-      //       storeId: payload.amazonStoreId,
-      //       accessToken: encrypt(payload.amazonAccessToken),
-      //     };
-      //   }
-      // });
+      payload.platforms?.forEach((platform) => {
+        if (
+          platform === platforms.shopify &&
+          payload.shopifyStoreId
+          // && payload.shopifyAccessToken
+        ) {
+          credentials[platform] = {
+            storeId: payload.shopifyStoreId,
+            // accessToken: encrypt(payload.shopifyAccessToken),
+          };
+        }
+        if (
+          platform === platforms.amazon &&
+          payload.amazonStoreId
+          //  && payload.amazonAccessToken
+        ) {
+          credentials[platform] = {
+            storeId: payload.amazonStoreId,
+            // accessToken: encrypt(payload.amazonAccessToken),
+          };
+        }
+      });
 
       // Create Store
       const store = new Store({
@@ -102,9 +109,11 @@ class VendorService {
    * Retrieve a single store by vendor ID
    * @param id - Vendor ID
    */
-  async getVendorStore(id: string): Promise<IStore> {
+  async getVendorStore(id: string, select = ""): Promise<IStore> {
     try {
-      const store = await Store.findOne({vendor: id}).populate("platforms");
+      const store = await Store.findOne({vendor: id})
+        .select(select)
+        .populate("platforms");
       if (!store) {
         throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Vendor not found");
       }
@@ -121,9 +130,10 @@ class VendorService {
    * Retrieve a single vendor store by ID
    * @param id - Store ID
    */
-  async getVendorById(id: string): Promise<IStore> {
+  async getVendorById(id: string, select = ""): Promise<IStore> {
     try {
       const store = await Store.findById(id)
+        .select(select)
         .populate("vendorDetails", "-password")
         .populate("platforms");
       if (!store) {
@@ -191,7 +201,9 @@ class VendorService {
     }
   }
 
-  async syncProducts(storeId: string): Promise<any> {
+  async syncProducts(
+    storeId: string
+  ): Promise<{products: IProduct[]; message: string}> {
     try {
       const store = await Store.findById(storeId).select("+credentials");
       if (!store) {
@@ -208,8 +220,8 @@ class VendorService {
           await platformService.fetchProducts(storeId);
         }
       }
-
-      return {message: "Products synchronized successfully"};
+      const products = await Product.find({store: storeId});
+      return {products, message: "Products synchronized successfully"};
     } catch (error: any) {
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
@@ -222,7 +234,9 @@ class VendorService {
    * Synchronize orders from all platforms for a store
    * @param storeId - Store ID
    */
-  async syncOrders(storeId: string): Promise<any> {
+  async syncOrders(
+    storeId: string
+  ): Promise<{orders: IOrder[]; message: string}> {
     try {
       const store = await Store.findById(storeId).select("+credentials");
       if (!store) {
@@ -239,8 +253,9 @@ class VendorService {
           await platformService.fetchOrders(storeId);
         }
       }
+      const orders = await Order.find({store: storeId});
 
-      return {message: "Orders synchronized successfully"};
+      return {orders, message: "Orders synchronized successfully"};
     } catch (error: any) {
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,

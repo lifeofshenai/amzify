@@ -45,6 +45,7 @@ const StoreSchema = new Schema<IStore>(
     credentials: {
       type: Schema.Types.Mixed, // Dynamic keys based on platforms
       default: {},
+      select: false,
     },
     name: {type: String, required: true},
     description: {type: String, required: true},

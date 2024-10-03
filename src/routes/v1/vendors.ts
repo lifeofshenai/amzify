@@ -6,9 +6,9 @@ import {
   getVendorById,
   updateVendor,
   syncProducts,
+  syncOrders,
 } from "../../controllers/vendor";
-import {authenticate, authorize} from "../../middleware/auth";
-import {ROLES} from "../../utils/constants";
+import {authenticate} from "../../middleware/auth";
 import {Requirements, Validate} from "../../middleware/validator";
 
 const router: Router = Router();
@@ -25,7 +25,9 @@ router
 
 router.route("/:id").get(getVendorById).put(updateVendor);
 
-// Sync products from Shopify
+// Sync store products
 router.route("/:id/sync-products").post(syncProducts);
+// Sync store orders
+router.route("/:id/sync-orders").post(syncOrders);
 
 export default router;
