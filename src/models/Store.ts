@@ -1,19 +1,25 @@
+// backend/models/Store.ts
+
 import {model, Schema, Document} from "mongoose";
 import collections from "../utils/collections";
 import {platforms} from "../utils/constants";
 
+export interface IStorePlatformCredentials {
+  storeId: string;
+  accessToken: string;
+}
+
 export interface IStore extends Document {
   vendor: Schema.Types.ObjectId;
-  platforms: string[];
+  platforms: string[]; // e.g., ['shopify', 'amazon']
+  credentials: {
+    [key: string]: IStorePlatformCredentials; // Keyed by platform name
+  };
   name: string;
   description: string;
   url: string;
   logo: string;
   isActive: boolean;
-  shopifyStoreId: string;
-  amazonStoreId: string;
-  shopifyAccessToken: string;
-  amazonAccessToken: string;
 
   createdAt: Date;
   updatedAt: Date;
@@ -36,6 +42,10 @@ const StoreSchema = new Schema<IStore>(
       ],
       default: [],
     },
+    credentials: {
+      type: Schema.Types.Mixed, // Dynamic keys based on platforms
+      default: {},
+    },
     name: {type: String, required: true},
     description: {type: String, required: true},
     url: {type: String, required: false},
@@ -46,11 +56,6 @@ const StoreSchema = new Schema<IStore>(
         "https://www.kindpng.com/picc/m/722-7221920_placeholder-profile-image-placeholder-png-transparent-png.png",
     },
     isActive: {type: Boolean, default: true},
-    // status:{type:String, }
-    shopifyStoreId: {type: String, required: false},
-    shopifyAccessToken: {type: String, required: false, select: false},
-    amazonStoreId: {type: String, required: false},
-    amazonAccessToken: {type: String, required: false, select: false},
   },
   {
     timestamps: true,
@@ -58,5 +63,13 @@ const StoreSchema = new Schema<IStore>(
     toObject: {virtuals: true},
   }
 );
+
+// Example virtual to populate vendor details
+StoreSchema.virtual("vendorDetails", {
+  ref: collections.users,
+  localField: "vendor",
+  foreignField: "_id",
+  justOne: true,
+});
 
 export const Store = model<IStore>(collections.stores, StoreSchema);
