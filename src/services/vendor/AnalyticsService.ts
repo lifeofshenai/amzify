@@ -4,7 +4,6 @@ import {Order} from "../../models/Order";
 import {Store} from "../../models/Store";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ErrorResponse from "../../utils/error";
-import {ROLES, platforms} from "../../utils/constants";
 
 class AnalyticsService {
   /**
