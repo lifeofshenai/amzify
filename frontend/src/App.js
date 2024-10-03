@@ -10,7 +10,11 @@ import AddVendor from "./pages/admin/AddVendorForm";
 import ViewVendorProfile from "./pages/admin/VendorProfile";
 
 // Vendor Pages
-import VendorDashboard from "./pages/vendor/VendorDashboard";
+// import VendorDashboard from "./pages/vendor/Dashboard";
+import Products from "./pages/vendor/Products";
+import AddNewProduct from "./pages/vendor/AddNewproduct";
+// import VendorDashboard from "./pages/vendor/VendorDashboard";
+
 
 // Public Pages
 import LoginPage from "./pages/LoginPage";
@@ -18,7 +22,7 @@ import LoginPage from "./pages/LoginPage";
 // vendor layout
 import VendorLayout from "./layouts/vendor";
 // import VendorDashboard from "./pages/vendor/Dashboard";
-import Products from "./pages/vendor/Products";
+// import Products from "./pages/vendor/Products";
 
 function App() {
   return (
@@ -41,23 +45,21 @@ function App() {
           element={<ViewVendorProfile />}
         />
       </Route>
-      {/* Vendor Routes Section */}
-
-      <Route path="/vendor" element={<VendorLayout />}>
-        {/* Nested routes under VendorLayout */}
-        <Route index element={<VendorDashboard />} />
-        <Route path="products" element={<Products />} />
-      </Route>
-
+      
       {/* Vendor Routes */}
       <Route
         path="/vendor"
         element={
           <ProtectedRoute allowedRoles={["vendor"]}>
-            <VendorDashboard />
+            <VendorLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        {/* Nested routes under VendorLayout */}
+          <Route index element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/add" element={<AddNewProduct />} />
+        </Route>
 
       {/* Public Routes */}
       <Route path="/" element={<LoginPage />} />

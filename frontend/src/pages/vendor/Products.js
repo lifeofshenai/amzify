@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { Button } from "./Button";
 import { Card } from "./Card";
 import { Table, TableBody, TableCell, TableHead, TableRow } from "./Table";
@@ -31,7 +33,9 @@ export default function ProductManagement() {
   </div>
 </Card>
         <div className="space-y-2">
-          <Button className="w-full" variant="default">New Product</Button>
+          <Button className="w-full" variant="default">
+            <Link to="/vendor/products/add">Add New Product</Link>
+          </Button>
           <Button className="w-full" variant="orange">Drafts</Button>
           <Button className="w-full" variant="gray">Best Seller Runner Up</Button>
         </div>
