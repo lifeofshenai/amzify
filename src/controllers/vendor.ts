@@ -13,6 +13,7 @@ export const createVendor = async (
 ): Promise<any> => {
   try {
     const payload = req.body;
+    const {files} = req;
 
     const store: IStore = await VendorService.createVendor(payload);
 

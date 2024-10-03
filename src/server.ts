@@ -7,6 +7,7 @@ import {Application} from "express";
 import AppConfig from "./config/appConfig";
 import MorganMiddleware from "./middleware/morgan";
 import errorHandler from "./middleware/handlers/error";
+// import "./scheduler";
 
 export function createServer(): Application {
   const app = express();

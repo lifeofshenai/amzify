@@ -3,9 +3,11 @@ import {IUser, User} from "../../models/User";
 import ErrorResponse from "../../utils/error";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ShopifyService from "../shopify/ShopifyService";
-import {encrypt} from "../../utils/encryption";
-import {ROLES} from "../../utils/constants";
+import {decrypt, encrypt} from "../../utils/encryption";
+import {platforms, ROLES} from "../../utils/constants";
 import mongoose from "mongoose";
+import {Product} from "../../models/Products";
+import {platform} from "os";
 
 class VendorService {
   /**
@@ -136,20 +138,68 @@ class VendorService {
    */
   async syncProducts(storeId: string): Promise<any> {
     try {
-      const store = await Store.findById(storeId);
+      const store = await Store.findById(storeId).select("+shopifyAccessToken");
+      if (!store) {
+        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
+      }
+      const accessToken = decrypt(store.shopifyAccessToken);
+      const shopifyService = new ShopifyService(
+        store.shopifyStoreId,
+        accessToken
+      );
+
+      const products = await shopifyService.fetchProducts();
+
+      // store products in your database
+      await Product.insertMany(
+        products.map((product: any) => ({
+          store: store._id,
+          platform: platforms.shopify,
+          platformProductId: product.id,
+          name: product.title,
+          description: product.body_html,
+          price: product.variants[0].price,
+          inventory: product.variants[0].inventory_quantity,
+          image: product.images[0]?.src || "",
+        })),
+        {lean: true}
+      );
+
+      return products;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
+  async fetchOrders(storeId: string): Promise<any> {
+    try {
+      const store = await Store.findById(storeId).select("+shopifyAccessToken");
       if (!store) {
         throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
       }
 
+      const accessToken = decrypt(store.shopifyAccessToken);
       const shopifyService = new ShopifyService(
         store.shopifyStoreId,
-        store.shopifyAccessToken
+        accessToken
       );
-      const products = await shopifyService.fetchProducts();
+      const orders = await shopifyService.fetchOrders();
 
-      // Here, you can choose to store products in your database or process them as needed
-      // For simplicity, we'll return the fetched products
-      return products;
+      // Optionally, store orders in your database
+      // Example:
+      // await Order.insertMany(orders.map(order => ({
+      //   store: store._id,
+      //   shopifyOrderId: order.id,
+      //   totalPrice: order.total_price,
+      //   createdAt: order.created_at,
+      //   lineItems: order.line_items.map(item => ({
+      //     name: item.name,
+      //     quantity: item.quantity,
+      //     price: item.price,
+      //   })),
+      // })));
+
+      return orders;
     } catch (error: any) {
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
@@ -157,8 +207,6 @@ class VendorService {
       );
     }
   }
-
-  // Similarly, implement syncOrders if needed
 }
 
 export default new VendorService();

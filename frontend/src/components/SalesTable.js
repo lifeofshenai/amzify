@@ -2,11 +2,11 @@ import React from "react";
 
 // Data for the table
 const tableData = [
-  { category: "Shirts", price: 450, units: 1200, data: 80 },
-  { category: "Skirts", price: 420, units: 1100, data: 70 },
-  { category: "Accessories", price: 380, units: 1056, data: 65 },
-  { category: "Beauty", price: 350, units: 987, data: 50 },
-  { category: "Skin Care", price: 324, units: 900, data: 40 },
+  {category: "Shirts", price: 450, units: 1200, data: 80},
+  {category: "Skirts", price: 420, units: 1100, data: 70},
+  {category: "Accessories", price: 380, units: 1056, data: 65},
+  {category: "Beauty", price: 350, units: 987, data: 50},
+  {category: "Skin Care", price: 324, units: 900, data: 40},
 ];
 
 const SalesTable = () => {
@@ -14,10 +14,9 @@ const SalesTable = () => {
     <div className="w-full bg-white p-4">
       <div className="flex justify-between mb-4">
         <h2 className="text-xl font-semibold">Table title</h2>
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        <a href="#" className="text-pink-500 hover:underline">
+        <span href="#" className="text-pink-500 hover:underline">
           See details &rarr;
-        </a>
+        </span>
       </div>
 
       <div className="overflow-x-auto">
@@ -40,7 +39,7 @@ const SalesTable = () => {
                   <div className="w-full h-3 bg-pink-100 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-pink-500"
-                      style={{ width: `${item.data}%` }}
+                      style={{width: `${item.data}%`}}
                     ></div>
                   </div>
                 </td>
