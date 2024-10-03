@@ -12,6 +12,7 @@ import AddVendor from "./pages/admin/AddVendorForm";
 // Vendor Pages
 import VendorDashboard from "./pages/vendor/Dashboard";
 import Products from "./pages/vendor/Products";
+import AddNewProduct from "./pages/vendor/AddNewproduct";
 
 // Main Site Pages
 import LoginPage from "./pages/LoginPage";
@@ -31,6 +32,7 @@ function App() {
       <Route path="/vendor" element={<VendorLayout />}>
         <Route index element={<VendorDashboard />} />
         <Route path="products" element={<Products />} />
+        <Route path="products/add" element={<AddNewProduct />} />
       </Route>
 
 
