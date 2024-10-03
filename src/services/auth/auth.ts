@@ -4,13 +4,16 @@ import {LoginType, SignUpType} from "../../types/auth";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ErrorResponse from "../../utils/error";
 import {ErrorLogger} from "../../utils/logger";
+import {ROLES} from "../../utils/constants";
+import VendorService from "../vendor/VendorService";
+import {IStore} from "../../models/Store";
 
 class AuthService {
   async login(
     payload: LoginType
   ): Promise<
-    | {token: string; user: IUser; err?: null}
-    | {err: ErrorResponse; token?: null; user?: null}
+    | {token: string; user: IUser; store?: IStore; err?: null}
+    | {err: ErrorResponse; token?: null; store?: null; user?: null}
   > {
     try {
       const user = await User.findOne({
@@ -32,8 +35,11 @@ class AuthService {
       if (!token) {
         throw new Error("Invalid token");
       }
-
-      return {token, user};
+      let store;
+      if (user.role == ROLES.vendor) {
+        store = await VendorService.getVendorStore(user.id);
+      }
+      return {token, user, store};
     } catch (error: any) {
       ErrorLogger(error);
       return {err: error};
