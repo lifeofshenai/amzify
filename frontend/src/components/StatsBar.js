@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
-import {
-  FaClock,
-  FaUserCheck,
-  FaUsers,
-  FaUserTimes,
-} from "react-icons/fa";
-import axiosInstance from "../services/instantAxios"; 
+import { FaClock, FaUserCheck, FaUsers, FaUserTimes } from "react-icons/fa";
+import { toast } from "react-toastify";
+import axiosInstance from "../services/instantAxios";
+import LoadingSpinner from "./LoadingSpinner";
 import VendorCard from "./VendorCard";
 import VendorTable from "./VendorTable";
-import LoadingSpinner from "./LoadingSpinner";
-import { toast } from "react-toastify";
-
 
 const StatsBar = () => {
   const [loading, setLoading] = useState(true);
@@ -29,7 +23,6 @@ const StatsBar = () => {
       try {
         const response = await axiosInstance.get("/vendors");
         const stores = response.data.data.stores;
-
         // Organize vendors into different categories
         const allVendors = stores;
         const activeVendors = stores.filter((store) => store.vendor.isActive);
@@ -46,7 +39,6 @@ const StatsBar = () => {
         });
 
         setLoading(false);
-
       } catch (error) {
         toast.error("Failed to fetch vendor details.");
         console.error("Error fetching vendors:", error);
