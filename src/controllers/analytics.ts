@@ -10,6 +10,33 @@ class AnalyticsController {
   /**
    * Get Total GMV
    */
+  async getMetrics(req: Request, res: Response): Promise<void> {
+    try {
+      const {platforms: platformFilter} = req.query;
+      const platformsArray = platformFilter
+        ? (platformFilter as string).split(",")
+        : undefined;
+
+      const totalGMV = await AnalyticsService.getTotalGMV(platformsArray);
+      const totalRevenue = await AnalyticsService.getTotalRevenue(
+        10,
+        platformsArray
+      );
+      const status = await AnalyticsService.getStoreStatus(platformsArray);
+      sendSuccessResponse(
+        res,
+        HTTP_STATUS.OK_200,
+        {totalGMV, totalRevenue, vendors: status},
+        "Metrics retrieved successfully"
+      );
+    } catch (error: any) {
+      ErrorLogger(error, res);
+    }
+  }
+
+  /**
+   * Get Total GMV
+   */
   async getTotalGMV(req: Request, res: Response): Promise<void> {
     try {
       const {platforms: platformFilter} = req.query;
@@ -28,7 +55,6 @@ class AnalyticsController {
       ErrorLogger(error, res);
     }
   }
-
   /**
    * Get Total Revenue
    */
@@ -60,16 +86,28 @@ class AnalyticsController {
    */
   async getSalesTrends(req: Request, res: Response): Promise<void> {
     try {
-      const {startDate, endDate, platforms: platformFilter} = req.query;
+      const {
+        startDate,
+        endDate,
+        platforms: platformFilter,
+        filter = "mothly",
+      } = req.query;
       const platformsArray = platformFilter
         ? (platformFilter as string).split(",")
         : undefined;
 
-      const sales = await AnalyticsService.getDailySales(
-        startDate ? new Date(startDate as string) : undefined,
-        endDate ? new Date(endDate as string) : undefined,
-        platformsArray
-      );
+      const sales =
+        filter == "daily"
+          ? await AnalyticsService.getDailySales(
+              startDate ? new Date(startDate as string) : undefined,
+              endDate ? new Date(endDate as string) : undefined,
+              platformsArray
+            )
+          : await AnalyticsService.getMonthlySales(
+              startDate ? new Date(startDate as string) : undefined,
+              endDate ? new Date(endDate as string) : undefined,
+              platformsArray
+            );
       sendSuccessResponse(
         res,
         HTTP_STATUS.OK_200,
@@ -113,7 +151,7 @@ class AnalyticsController {
   async getTopSellingProducts(req: Request, res: Response): Promise<void> {
     try {
       const {limit, platforms: platformFilter} = req.query;
-      const topLimit = limit ? parseInt(limit as string) : 10; // Default to 10
+      const topLimit = limit ? parseInt(limit as string) : 5; // Default to 10
       const platformsArray = platformFilter
         ? (platformFilter as string).split(",")
         : undefined;
