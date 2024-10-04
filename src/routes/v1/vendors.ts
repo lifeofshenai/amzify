@@ -29,7 +29,7 @@ router.route("/:id").get(getVendorById).put(updateVendor);
 
 router.route("/:id/sync-products").post(syncProducts);
 router.route("/:id/sync-orders").post(syncOrders);
-router.route("/:id/payouts").post(fetchPayouts);
-router.route("/:id/balance").post(fetchBalance);
+router.route("/:id/payouts").get(fetchPayouts);
+router.route("/:id/balance").get(fetchBalance);
 
 export default router;
