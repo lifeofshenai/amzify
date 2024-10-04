@@ -1,7 +1,11 @@
 // backend/models/Order.ts
 import {model, Schema, Document} from "mongoose";
 import collections from "../utils/collections";
-import {platforms} from "../utils/constants";
+import {
+  orderFinancialStatuses,
+  orderFulfillmentStatuses,
+  platforms,
+} from "../utils/constants";
 
 export interface IOrder extends Document {
   store: Schema.Types.ObjectId;
@@ -16,6 +20,8 @@ export interface IOrder extends Document {
     quantity: number;
     price: number;
   }[];
+  financialStatus: string;
+  fulfillmentStatus: string;
 }
 
 const OrderSchema = new Schema<IOrder>(
@@ -40,6 +46,18 @@ const OrderSchema = new Schema<IOrder>(
         price: {type: Number, required: true},
       },
     ],
+    financialStatus: {
+      type: String,
+      enum: Object.values(orderFinancialStatuses),
+      default: orderFinancialStatuses.pending,
+      required: true,
+    },
+    fulfillmentStatus: {
+      type: String,
+      enum: Object.values(orderFulfillmentStatuses),
+      default: orderFulfillmentStatuses.unfulfilled,
+      required: true,
+    },
   },
   {
     timestamps: true,

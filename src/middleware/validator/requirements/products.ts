@@ -16,6 +16,13 @@ const productsRequirement = {
     query("limit").optional().isInt({min: 1, max: 100}),
   ],
   ordersQuery: [
+    query("financialStatus")
+      .optional()
+      .isIn(["paid", "pending", "refunded", "partially_refunded"]),
+    query("fulfillmentStatus")
+      .optional()
+      .isIn(["fulfilled", "unfulfilled", "partial", "restocked"]),
+
     query("platform").optional().isIn(Object.values(platforms)),
     query("vendorId").optional().isMongoId(),
     query("status").optional().isString().trim(),

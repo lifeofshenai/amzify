@@ -98,6 +98,8 @@ class ShopifyPlatformService implements IPlatformService {
             quantity: item.quantity,
             price: parseFloat(item.price),
           })),
+          financialStatus: order.financial_status,
+          fulfillmentStatus: order.fulfillment_status,
         };
         const options = {upsert: true, new: true, setDefaultsOnInsert: true};
         return Order.findOneAndUpdate(filter, update, options);

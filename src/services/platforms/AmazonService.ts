@@ -121,6 +121,10 @@ class AmazonPlatformService implements IPlatformService {
             quantity: item.QuantityOrdered,
             price: parseFloat(item.SellingPrice.Amount) || 0,
           })),
+          financialStatus: mapAmazonFinancialStatus(order.PaymentMethodDetails),
+          fulfillmentStatus: mapAmazonFulfillmentStatus(
+            order.FulfillmentChannel
+          ),
         };
         const options = {upsert: true, new: true, setDefaultsOnInsert: true};
         return Order.findOneAndUpdate(filter, update, options);
@@ -139,3 +143,10 @@ class AmazonPlatformService implements IPlatformService {
 }
 
 export default AmazonPlatformService;
+function mapAmazonFinancialStatus(PaymentMethodDetails: any) {
+  throw new Error("Function not implemented.");
+}
+
+function mapAmazonFulfillmentStatus(FulfillmentChannel: any) {
+  throw new Error("Function not implemented.");
+}
