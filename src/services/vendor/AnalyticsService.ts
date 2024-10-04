@@ -103,6 +103,49 @@ class AnalyticsService {
   }
 
   /**
+   * Get Sales Trends (Daily Sales) across all platforms or specific platforms
+   * @param startDate - Optional start date
+   * @param endDate - Optional end date
+   * @param platformFilter - Optional array of platforms to filter
+   */
+  async getMonthlySales(
+    startDate?: Date,
+    endDate?: Date,
+    platformFilter?: string[]
+  ): Promise<any[]> {
+    try {
+      const match: any = {};
+
+      if (startDate || endDate) {
+        match.createdAt = {};
+        if (startDate) match.createdAt.$gte = startDate;
+        if (endDate) match.createdAt.$lte = endDate;
+      }
+
+      if (platformFilter && platformFilter.length > 0) {
+        match.platform = {$in: platformFilter};
+      }
+
+      const sales = await Order.aggregate([
+        {$match: match},
+        {
+          $group: {
+            _id: {$dateToString: {format: "%Y-%m", date: "$createdAt"}},
+            monthlySales: {$sum: "$totalPrice"},
+          },
+        },
+        {$sort: {_id: 1}},
+      ]);
+
+      return sales;
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        error.message
+      );
+    }
+  }
+  /**
    * Get Revenue per Vendor across all platforms or specific platforms
    * @param takeRate - Percentage take rate (default 10%)
    * @param platformFilter - Optional array of platforms to filter
