@@ -1,4 +1,3 @@
-// backend/controllers/vendors.ts
 import {Request, Response} from "express";
 import VendorService from "../services/vendor/VendorService";
 import {HTTP_STATUS} from "../utils/constants/statusCodes";

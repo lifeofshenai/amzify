@@ -13,6 +13,9 @@ export const orderFinancialStatuses = {
   pending: "pending",
   refunded: "refunded",
   partially_refunded: "partially_refunded",
+  authorized: "authorized",
+  partially_paid: "partially_paid",
+  voided: "voided",
 };
 export const orderFulfillmentStatuses = {
   fulfilled: "fulfilled",
