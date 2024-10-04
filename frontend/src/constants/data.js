@@ -50,19 +50,6 @@ export const cardData = [
   },
 ];
 
-export const user = {
-  name: "John Doe",
-  role: "Admin",
-  email: "john.doe@example.com",
-  phone: "+123456789",
-  profileImage: "../assets/Passport.png",
-  socials: {
-    facebook: "https://facebook.com/johndoe",
-    twitter: "https://twitter.com/johndoe",
-    linkedin: "https://linkedin.com/in/johndoe",
-    instagram: "https://instagram.com/johndoe",
-  },
-};
 
 export const DUMMY_DATA = {
   allVendors: [

@@ -1,44 +1,59 @@
-import { FaSearch, FaAlignJustify } from "react-icons/fa";
+import { motion } from "framer-motion"; // Import framer-motion
+import { useState } from "react";
+import { FaAlignJustify, FaSearch } from "react-icons/fa";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import Dropdown from "../components/dropdown";
-import { useSidebarContext } from "../context/SidebarContext";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react"; // Import useState for handling logout state
+import { useSidebarContext } from "../context/SidebarContext";
 
 const Navbar = () => {
   const { openSidebar } = useSidebarContext();
   const { user, logout } = useAuth();
-  const [logoutLoading, setLogoutLoading] = useState(false); // Logout loading state
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   // Handle logout functionality
   const handleLogout = async () => {
-    if (logoutLoading) return; // Prevent multiple clicks if already logging out
-    setLogoutLoading(true); // Set loading state to true
+    if (logoutLoading) return;
+    setLogoutLoading(true);
 
     try {
-      await logout(); // Call the logout function
+      await logout();
     } catch (error) {
-      console.error("Error during logout:", error); // Handle any error during logout
+      console.error("Error during logout:", error);
     } finally {
-      setLogoutLoading(false); // Reset the loading state after logout completes
+      setLogoutLoading(false);
     }
   };
 
   return (
-    <nav
+    <motion.nav
       className={`navbar sticky top-4 z-40 flex justify-stretch items-center mt-2 w-full bg-base-100 rounded-lg bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]`}
+      initial={{ opacity: 0, y: -20 }} // Start from offscreen
+      animate={{ opacity: 1, y: 0 }} // Slide down and fade in
+      transition={{ duration: 0.5, ease: "easeOut" }} // Smooth transition
     >
-      <div className="relative mt-[3px] h-[65px] flex flex-grow items-center justify-around gap-2 rounded-full bg-base-100 px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[1080px] md:flex-grow-0 md:gap-1 xl:w-[1080px] xl:gap-2">
+      <motion.div
+        className="relative mt-[3px] h-[65px] flex flex-grow items-center justify-around gap-2 rounded-full bg-base-100 px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[1080px] md:flex-grow-0 md:gap-1 xl:w-[1080px] xl:gap-2"
+        initial={{ opacity: 0, scale: 0.9 }} // Slightly scaled down initially
+        animate={{ opacity: 1, scale: 1 }} // Scale up to normal size
+        transition={{ duration: 0.3, ease: "easeOut" }}
+      >
         {/* Sidebar Toggle Button */}
-        <span
-          className="flex transition ease-in-out animate-bounce cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
+        <motion.span
+          className="flex transition ease-in-out animate-pulse cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
+          whileHover={{ scale: 1.2 }} // Hover effect to enlarge icon
           onClick={openSidebar}
         >
           <FaAlignJustify className="h-5 w-5" />
-        </span>
+        </motion.span>
 
         {/* Search Bar */}
-        <div className="flex border h-full items-center rounded-full bg-light text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]">
+        <motion.div
+          className="flex border h-full items-center rounded-full bg-light text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]"
+          initial={{ x: -50, opacity: 0 }} // Slide in from left
+          animate={{ x: 0, opacity: 1 }} // Slide to original position
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
           <p className="pl-3 pr-2 text-xl">
             <FaSearch className="h-4 w-4 text-gray-400 dark:text-white" />
           </p>
@@ -47,12 +62,18 @@ const Navbar = () => {
             placeholder="Search..."
             className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-gray-400 dark:bg-navy-900 dark:text-white dark:placeholder:!text-white sm:w-fit"
           />
-        </div>
+        </motion.div>
 
         {/* Notification Icon */}
         <Dropdown
           button={
-            <IoMdNotificationsOutline className="h-5 w-5 rounded-lg shadow-lg text-gray-600 dark:text-white" />
+            <motion.div
+              className="relative cursor-pointer"
+              whileHover={{ rotate: [0, 10, -10, 0] }} // Rotation animation on hover
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <IoMdNotificationsOutline className="h-5 w-5 rounded-lg shadow-lg text-gray-600 dark:text-white" />
+            </motion.div>
           }
           children={
             <div className="flex w-[360px] flex-col gap-3 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none sm:w-[460px]">
@@ -74,8 +95,11 @@ const Navbar = () => {
         {/* User Profile Section */}
         <Dropdown
           button={
-            <div className="flex items-center space-x-3">
-              {/* Profile Picture */}
+            <motion.div
+              className="flex items-center space-x-3"
+              whileHover={{ scale: 1.05 }} // Hover effect for profile section
+              transition={{ type: "spring", stiffness: 150 }}
+            >
               <img
                 className="rounded-full btn btn-ghost btn-circle avatar"
                 src={
@@ -84,17 +108,15 @@ const Navbar = () => {
                 }
                 alt={user?.firstName || "User Avatar"}
               />
-
-              {/* User Info */}
               <div className="text-left">
                 <p className="font-semibold text-gray-800 dark:text-white">
-                  {user?.firstName} {user?.lastName} {/* Full name */}
+                  {user?.firstName} {user?.lastName}
                 </p>
                 <p className="text-xs font-semibold text-pink-700 dark:text-pink-500">
-                  {user?.role?.toUpperCase()} {/* Display role in uppercase */}
+                  {user?.role?.toUpperCase()}
                 </p>
               </div>
-            </div>
+            </motion.div>
           }
           children={
             <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
@@ -122,21 +144,20 @@ const Navbar = () => {
                 </a>
                 <button
                   onClick={handleLogout}
-                  disabled={logoutLoading} // Disable button during logout process
+                  disabled={logoutLoading}
                   className={`mt-3 btn btn-sm btn-primary text-sm font-medium ${
                     logoutLoading ? "btn-disabled" : "text-red-500"
                   } transition duration-200 ease-out hover:text-red-500 hover:ease-in`}
                 >
-                  {logoutLoading ? "Logging out..." : "Log Out"}{" "}
-                  {/* Show loading text when logging out */}
+                  {logoutLoading ? "Logging out..." : "Log Out"}
                 </button>
               </div>
             </div>
           }
           classNames={"py-2 top-8 -left-[180px] w-max"}
         />
-      </div>
-    </nav>
+      </motion.div>
+    </motion.nav>
   );
 };
 

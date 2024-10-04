@@ -1,14 +1,14 @@
 import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/admin";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 // Admin Pages
+import AddVendor from "./pages/admin/AddVendorForm";
 import Analytics from "./pages/admin/Analytics";
 import Dashboard from "./pages/admin/Dashboard";
+import Product from "./pages/admin/Product";
 import VendorManagement from "./pages/admin/VendorManagement";
-import AddVendor from "./pages/admin/AddVendorForm";
 import ViewVendorProfile from "./pages/admin/VendorProfile";
-
 
 // Vendor Pages
 import VendorDashboard from "./pages/vendor/VendorDashboard";
@@ -36,6 +36,7 @@ function App() {
           path="vendor-profile/:vendorId"
           element={<ViewVendorProfile />}
         />
+        <Route path="products" element={<Product />} />
       </Route>
 
       {/* Vendor Routes */}
