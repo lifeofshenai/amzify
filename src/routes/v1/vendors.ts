@@ -7,6 +7,8 @@ import {
   updateVendor,
   syncProducts,
   syncOrders,
+  fetchPayouts,
+  fetchBalance,
 } from "../../controllers/vendor";
 import {authenticate} from "../../middleware/auth";
 import {Requirements, Validate} from "../../middleware/validator";
@@ -25,9 +27,9 @@ router
 
 router.route("/:id").get(getVendorById).put(updateVendor);
 
-// Sync store products
 router.route("/:id/sync-products").post(syncProducts);
-// Sync store orders
 router.route("/:id/sync-orders").post(syncOrders);
+router.route("/:id/payouts").post(fetchPayouts);
+router.route("/:id/balance").post(fetchBalance);
 
 export default router;

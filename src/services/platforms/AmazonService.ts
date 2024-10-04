@@ -25,6 +25,13 @@ class AmazonPlatformService implements IPlatformService {
     });
   }
 
+  fetchPayouts(storeId: string): Promise<any[]> {
+    throw new Error("Method not implemented.");
+  }
+  fetchBalance(storeId: string): Promise<any[]> {
+    throw new Error("Method not implemented.");
+  }
+
   /**
    * Fetch and synchronize products from Amazon
    * @param storeId - Store ID

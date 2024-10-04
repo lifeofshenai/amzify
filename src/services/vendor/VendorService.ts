@@ -263,6 +263,77 @@ class VendorService {
       );
     }
   }
+
+  /**
+   * Synchronize payouts from all platforms for a store
+   * @param storeId - Store ID
+   */
+  async fetchPayouts(
+    storeId: string
+  ): Promise<{payouts: any[]; message: string}> {
+    try {
+      const store = await Store.findById(storeId).select("+credentials");
+      if (!store) {
+        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
+      }
+
+      const {platforms, credentials} = store;
+      let payouts = [];
+      for (const platform of platforms) {
+        const platformCredentials = credentials[platform];
+        if (platformCredentials) {
+          const platformService =
+            PlatformServiceFactory.getPlatformService(platform);
+          const result = await platformService.fetchPayouts(storeId);
+          if (result.length) {
+            payouts.push(result);
+          }
+        }
+      }
+
+      return {payouts, message: "Payouts fetched successfully"};
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        `Sync Payouts error: ${error.message}`
+      );
+    }
+  }
+  /**
+   * Synchronize balances from all platforms for a store
+   * @param storeId - Store ID
+   */
+  async fetchBalances(
+    storeId: string
+  ): Promise<{balances: any[]; message: string}> {
+    try {
+      const store = await Store.findById(storeId).select("+credentials");
+      if (!store) {
+        throw new ErrorResponse(HTTP_STATUS.NOT_FOUND_404, "Store not found");
+      }
+
+      const {platforms, credentials} = store;
+      let balances = [];
+      for (const platform of platforms) {
+        const platformCredentials = credentials[platform];
+        if (platformCredentials) {
+          const platformService =
+            PlatformServiceFactory.getPlatformService(platform);
+          const result = await platformService.fetchBalance(storeId);
+          if (result.length) {
+            balances.push(result);
+          }
+        }
+      }
+
+      return {balances, message: "Balance fetched successfully"};
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        `Sync Balance error: ${error.message}`
+      );
+    }
+  }
 }
 
 export default new VendorService();

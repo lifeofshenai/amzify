@@ -2,6 +2,7 @@
 import axios, {AxiosInstance} from "axios";
 import ErrorResponse from "../../utils/error";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
+import ErrorLogger from "../../utils/logger";
 
 class ShopifyService {
   private client: AxiosInstance;
@@ -37,6 +38,7 @@ class ShopifyService {
         await this.sleep(retryAfter * 1000);
         return this.fetchProducts(retries - 1);
       }
+      ErrorLogger(error);
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
         `Failed to fetch products from Shopify: ${error.message}`
@@ -62,9 +64,68 @@ class ShopifyService {
       });
       return response.data.orders;
     } catch (error: any) {
+      ErrorLogger(error);
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
         `Failed to fetch orders from Shopify: ${error.message}`
+      );
+    }
+  }
+
+  /**
+   * Fetch products with retry on rate limit
+   */
+  async fetchPayouts(retries = 3): Promise<any> {
+    try {
+      const response = await this.client.get("shopify_payments/payouts.json", {
+        params: {
+          limit: 250,
+        },
+      });
+      return response.data.payouts;
+    } catch (error: any) {
+      ErrorLogger(error);
+      if (error.response && error.response.status === 429 && retries > 0) {
+        const retryAfter =
+          parseInt(error.response.headers["retry-after"], 10) || 2;
+        console.warn(
+          `Rate limit exceeded. Retrying after ${retryAfter} seconds...`
+        );
+        await this.sleep(retryAfter * 1000);
+        return this.fetchPayouts(retries - 1);
+      }
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        `Failed to fetch payouts from Shopify: ${error.message}`
+      );
+    }
+  }
+
+  /**
+   * Fetch store balance
+   */
+  async fetchBalance(retries = 3): Promise<any> {
+    try {
+      const response = await this.client.get("shopify_payments/balance.json", {
+        params: {
+          limit: 250,
+        },
+      });
+      return response.data.balance;
+    } catch (error: any) {
+      ErrorLogger(error);
+      if (error.response && error.response.status === 429 && retries > 0) {
+        const retryAfter =
+          parseInt(error.response.headers["retry-after"], 10) || 2;
+        console.warn(
+          `Rate limit exceeded. Retrying after ${retryAfter} seconds...`
+        );
+        await this.sleep(retryAfter * 1000);
+        return this.fetchBalance(retries - 1);
+      }
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        `Failed to fetch balance from Shopify: ${error.message}`
       );
     }
   }

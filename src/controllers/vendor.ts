@@ -113,3 +113,35 @@ export const syncOrders = async (
     sendErrorResponse(res, error);
   }
 };
+
+/**
+ * Endpoint to fetch store payouts
+ */
+export const fetchPayouts = async (
+  req: Request | any,
+  res: Response
+): Promise<any> => {
+  try {
+    const {id} = req.params; // Store ID
+    const {payouts, message} = await VendorService.fetchPayouts(id);
+    sendSuccessResponse(res, HTTP_STATUS.OK_200, {payouts}, message);
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
+
+/**
+ * Endpoint to fetch store balance
+ */
+export const fetchBalance = async (
+  req: Request | any,
+  res: Response
+): Promise<any> => {
+  try {
+    const {id} = req.params; // Store ID
+    const {balances, message} = await VendorService.fetchBalances(id);
+    sendSuccessResponse(res, HTTP_STATUS.OK_200, {balances}, message);
+  } catch (error) {
+    sendErrorResponse(res, error);
+  }
+};
