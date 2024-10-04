@@ -9,7 +9,7 @@ class ShopifyService {
 
   constructor(shopifyStoreId: string, shopifyAccessToken: string) {
     this.client = axios.create({
-      baseURL: `https://${shopifyStoreId}.myshopify.com/admin/api/2023-10/`,
+      baseURL: `https://${shopifyStoreId}.myshopify.com/admin/api/2024-10/`,
       headers: {
         "Content-Type": "application/json",
         "X-Shopify-Access-Token": shopifyAccessToken,
