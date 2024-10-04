@@ -34,7 +34,7 @@ export function createServer(): Application {
     cors({
       origin: "*",
       methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      credentials: true,
+      // credentials: true,
     })
   );
   // app.use(compression());
