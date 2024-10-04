@@ -4,6 +4,9 @@ import {Order} from "../models/Order";
 import {HTTP_STATUS} from "../utils/constants/statusCodes";
 import ErrorResponse from "../utils/error";
 import {ROLES, platforms} from "../utils/constants";
+import {paginate} from "../utils/functions";
+import {sendSuccessResponse} from "../utils/server";
+import ErrorLogger from "../utils/logger";
 
 class ProductOrderController {
   /**
@@ -79,30 +82,10 @@ class ProductOrderController {
           .populate("store", "name email"), // Populate store details if needed
       ]);
 
-      const totalPages = Math.ceil(total / pageSize);
-
-      res.status(HTTP_STATUS.OK_200).json({
-        success: true,
-        data: products,
-        meta: {
-          total,
-          page: pageNumber,
-          totalPages,
-          pageSize,
-        },
-      });
+      const pagination = paginate(total, pageSize, pageNumber);
+      sendSuccessResponse(res, HTTP_STATUS.OK_200, {products, pagination});
     } catch (error: any) {
-      if (error instanceof ErrorResponse) {
-        res.status(error.status).json({
-          success: false,
-          message: error.message,
-        });
-      } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR_500).json({
-          success: false,
-          message: "Server Error",
-        });
-      }
+      ErrorLogger(error, res);
     }
   }
 
@@ -191,30 +174,11 @@ class ProductOrderController {
           .populate("store", "name email"), // Populate store details if needed
       ]);
 
-      const totalPages = Math.ceil(total / pageSize);
+      const pagination = paginate(total, pageSize, pageNumber);
 
-      res.status(HTTP_STATUS.OK_200).json({
-        success: true,
-        data: orders,
-        meta: {
-          total,
-          page: pageNumber,
-          totalPages,
-          pageSize,
-        },
-      });
+      sendSuccessResponse(res, HTTP_STATUS.OK_200, {orders, pagination});
     } catch (error: any) {
-      if (error instanceof ErrorResponse) {
-        res.status(error.status).json({
-          success: false,
-          message: error.message,
-        });
-      } else {
-        res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR_500).json({
-          success: false,
-          message: "Server Error",
-        });
-      }
+      ErrorLogger(error, res);
     }
   }
 }
