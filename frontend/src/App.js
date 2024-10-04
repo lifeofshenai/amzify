@@ -1,20 +1,20 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/admin";
-import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 // Admin Pages
+import AddVendor from "./pages/admin/AddVendorForm";
 import Analytics from "./pages/admin/Analytics";
 import Dashboard from "./pages/admin/Dashboard";
+import Product from "./pages/admin/Product";
 import VendorManagement from "./pages/admin/VendorManagement";
-import AddVendor from "./pages/admin/AddVendorForm";
 import ViewVendorProfile from "./pages/admin/VendorProfile";
 
 // Vendor Pages
 // import VendorDashboard from "./pages/vendor/Dashboard";
-import Products from "./pages/vendor/Products";
 import AddNewProduct from "./pages/vendor/AddNewproduct";
+import Products from "./pages/vendor/Products";
 // import VendorDashboard from "./pages/vendor/VendorDashboard";
-
 
 // Public Pages
 import LoginPage from "./pages/LoginPage";
@@ -44,8 +44,9 @@ function App() {
           path="vendor-profile/:vendorId"
           element={<ViewVendorProfile />}
         />
+        <Route path="products" element={<Product />} />
       </Route>
-      
+
       {/* Vendor Routes */}
       <Route
         path="/vendor"
@@ -56,10 +57,10 @@ function App() {
         }
       >
         {/* Nested routes under VendorLayout */}
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<Products />} />
-          <Route path="products/add" element={<AddNewProduct />} />
-        </Route>
+        <Route index element={<Dashboard />} />
+        <Route path="products" element={<Products />} />
+        <Route path="products/add" element={<AddNewProduct />} />
+      </Route>
 
       {/* Public Routes */}
       <Route path="/" element={<LoginPage />} />
