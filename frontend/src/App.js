@@ -21,6 +21,7 @@ import LoginPage from "./pages/LoginPage";
 
 // vendor layout
 import VendorLayout from "./layouts/vendor";
+import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
 // import VendorDashboard from "./pages/vendor/Dashboard";
 // import Products from "./pages/vendor/Products";
 
@@ -38,6 +39,7 @@ function App() {
       >
         <Route index element={<Dashboard />} />
         <Route path="analytics" element={<Analytics />} />
+        <Route path="analytics-dashboard" element={<AnalyticsDashboard />} />
         <Route path="vendor" element={<VendorManagement />} />
         <Route path="vendor/add-vendor" element={<AddVendor />} />
         <Route

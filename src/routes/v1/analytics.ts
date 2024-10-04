@@ -19,6 +19,12 @@ router.use(authenticate);
 router.get("/", AnalyticsController.getAnalytics);
 
 /**
+ * @route GET /api/v1/analytics/metrics
+ * @desc Get all analytics
+ * @access Admin
+ */
+router.get("/metrics", AnalyticsController.getMetrics);
+/**
  * @route GET /api/v1/analytics/gmv
  * @desc Get Total Gross Merchandise Volume (GMV)
  * @access Admin
