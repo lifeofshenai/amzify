@@ -56,7 +56,7 @@ class ShopifyService {
       const response = await this.client.get("orders.json", {
         params: {
           status: "any",
-          financial_status: "paid",
+          // financial_status: "paid",
           limit: 250, // Adjust as needed
         },
       });
