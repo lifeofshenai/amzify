@@ -50,3 +50,24 @@ export function secondsToMidnight(date: any = new Date()) {
 
   return secondsToMidnight;
 }
+
+/**
+ * Helper functions to map Amazon statuses to your defined statuses
+ */
+export function mapAmazonFinancialStatus(paymentDetails: any): string {
+  // Implement mapping based on Amazon's API response
+  // Example:
+  if (paymentDetails.Paid) return "paid";
+  if (paymentDetails.Pending) return "pending";
+  // Add more conditions as per Amazon's data
+  return "pending";
+}
+
+export function mapAmazonFulfillmentStatus(fulfillmentChannel: string): string {
+  // Implement mapping based on Amazon's API response
+  // Example:
+  if (fulfillmentChannel === "AFN") return "fulfilled";
+  if (fulfillmentChannel === "MFN") return "unfulfilled";
+  // Add more conditions as per Amazon's data
+  return "unfulfilled";
+}

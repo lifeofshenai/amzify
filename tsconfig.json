@@ -107,6 +107,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/types/**/*.d.ts", "src/**/*.ts"],
+  "include": ["src/types/**/*.d.ts", "src/**/*.ts", "src/script/orders.dev.js"],
   "exclude": ["node_modules"]
 }

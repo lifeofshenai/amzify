@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { vendorLinks } from "../constants/data";
 import { HiX } from "react-icons/hi";
-import { useGlobalContext } from "../context";
+import { useSidebarContext } from "../context/SidebarContext";
 
 const VendorSidebar = () => {
-  const { isSidebarOpen, closeSidebar, openSidebar } = useGlobalContext();
+  const { isSidebarOpen, closeSidebar, openSidebar } = useSidebarContext();
+
 
   // Add a hook to handle sidebar visibility on window resize
   useEffect(() => {

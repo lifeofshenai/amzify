@@ -10,8 +10,8 @@ cron.schedule("0 0 * * *", async () => {
     const stores = await Store.find({isActive: true});
 
     for (const store of stores) {
-      await VendorService.syncProducts(store.id);
-      await VendorService.fetchOrders(store.id);
+      // await VendorService.syncProducts(store.id);
+      // await VendorService.fetchOrders(store.id);
       Logger.info(`Synchronized data for store: ${store.name}`);
     }
 

@@ -18,4 +18,5 @@ mainRouter.route("/create-admin").post(createAdmin);
 
 mainRouter.route("/profile").get(authenticate, currentUser);
 
+
 export default mainRouter;
