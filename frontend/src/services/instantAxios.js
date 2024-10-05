@@ -1,11 +1,11 @@
 import axios from "axios";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 
 // Create an instance of Axios
 const axiosInstance = axios.create({
   baseURL:
     process.env.REACT_APP_API_URL || "https://amzify-api.onrender.com/api/v1",
-  withCredentials: true, 
+  // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -37,9 +37,9 @@ axiosInstance.interceptors.response.use(
       console.log("Unauthorized! Redirecting to login.");
       // Optionally, clear cookies and redirect to login
       Cookies.remove("authToken");
-      window.location.href = "/"; 
+      window.location.href = "/";
     }
-    return Promise.reject(error); 
+    return Promise.reject(error);
   }
 );
 
