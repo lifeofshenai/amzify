@@ -15,18 +15,7 @@ function errorHandler(
 ) {
   const response: ResponseType = {success: false};
   if (err.message) {
-    const logs = {
-      type: err.name,
-      message: err.message,
-      method: req.method,
-      path: req.path,
-      params: req.route.path,
-      body: req.body,
-      query: req.query,
-      stack: err.stack,
-    };
     ErrorLogger(err);
-    // Logger.error(JSON.stringify(logs));
     response.message = AppConfig.app.isDevelopment
       ? err.message
       : "Something wrong!";

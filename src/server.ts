@@ -16,19 +16,36 @@ export function createServer(): Application {
   const whitelist = domainsFromEnv.split(",").map((item) => item.trim());
 
   const corsOption = {
-    origin: function (origin: any, callback: any) {
+    // origin: "*",
+    function(origin: any, callback: any) {
+      console.log(origin);
       if (!origin || whitelist.indexOf(origin) !== -1) {
+        console.log(whitelist.indexOf(origin));
         callback(null, true);
       } else {
         callback(Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
+    // credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Access-Control-Allow-Origin",
+    ],
   };
 
   app.use(express.urlencoded({extended: false}));
   app.use(express.json());
   app.use(cors(corsOption));
+
+  // app.use(
+  //   cors({
+  //     origin: "*",
+  //     // methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  //     credentials: false,
+  //   })
+  // );
   // app.use(compression());
   app.use(MorganMiddleware);
 
