@@ -9,9 +9,7 @@ const Providers = ({children}) => {
     <AppContext>
       <AuthProvider>
         <SidebarProvider>
-          {/* <AnalyticsProvider> */}
-          {children}
-          {/* </AnalyticsProvider> */}
+          <AnalyticsProvider>{children}</AnalyticsProvider>
         </SidebarProvider>
       </AuthProvider>
     </AppContext>
