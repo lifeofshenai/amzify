@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/admin";
 
@@ -37,9 +37,11 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<Dashboard />} />
+        {/* <Route index element={<Dashboard />} /> */}
+        <Route index element={<AnalyticsDashboard />} />
+
         <Route path="analytics" element={<Analytics />} />
-        <Route path="analytics-dashboard" element={<AnalyticsDashboard />} />
+        {/* <Route path="analytics-dashboard" element={<AnalyticsDashboard />} /> */}
         <Route path="vendor" element={<VendorManagement />} />
         <Route path="vendor/add-vendor" element={<AddVendor />} />
         <Route
