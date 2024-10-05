@@ -16,15 +16,16 @@ export function createServer(): Application {
   const whitelist = domainsFromEnv.split(",").map((item) => item.trim());
 
   const corsOption = {
-    origin: "*",
-    // function (origin: any, callback: any) {
-    //   console.log(origin);
-    //   if (!origin || whitelist.indexOf(origin) !== -1 || true) {
-    //     callback(null, true);
-    //   } else {
-    //     callback(Error("Not allowed by CORS"));
-    //   }
-    // },
+    // origin: "*",
+    function(origin: any, callback: any) {
+      console.log(origin);
+      if (!origin || whitelist.indexOf(origin) !== -1) {
+        console.log(whitelist.indexOf(origin));
+        callback(null, true);
+      } else {
+        callback(Error("Not allowed by CORS"));
+      }
+    },
     // credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Access-Control-Allow-Origin"],
