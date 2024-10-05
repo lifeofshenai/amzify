@@ -21,11 +21,8 @@ const VendorPerformanceTable = () => {
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
-<<<<<<< HEAD
-          {vendorPerformance.map((vendor) => (
-=======
+
           {vendorPerformance?.map((vendor) => (
->>>>>>> 3810eda0e86e30410d10e4c4eded3c84517dce70
             <tr key={vendor.vendorName}>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                 {vendor.vendorName}
