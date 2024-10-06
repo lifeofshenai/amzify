@@ -14,7 +14,7 @@ import {
 export const cardData = [
   {
     id: 1,
-    title: "Total Users",
+    title: "Total Vendors",
     value: "5,024",
     icon: <FaUsers className="text-blue-500" size={24} />,
     growth: "8.5% Up from yesterday",
@@ -32,7 +32,7 @@ export const cardData = [
   },
   {
     id: 3,
-    title: "Total Sales",
+    title: "Total Revenue",
     value: "$58,430",
     icon: <FaDollarSign className="text-green-500" size={24} />,
     growth: "4.3% Down from yesterday",
@@ -41,7 +41,7 @@ export const cardData = [
   },
   {
     id: 4,
-    title: "Total Pending",
+    title: "Total GMV",
     value: "742",
     icon: <FaHourglassHalf className="text-red-500" size={24} />,
     growth: "1.8% Up from yesterday",

@@ -1,30 +1,95 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { FaBuilding, FaEnvelope, FaStore, FaUser } from "react-icons/fa";
+import {
+  FaAudioDescription,
+  FaBuilding,
+  FaCalendarAlt,
+  FaEnvelope,
+  FaLink,
+  FaStore,
+  FaUser,
+} from "react-icons/fa";
 
 // Vendor Info Component
-const VendorInfo = ({ store }) => {
+const VendorInfo = ({
+  name,
+  isActive: storeActive,
+  platforms,
+  description,
+  url,
+  vendorDetails,
+}) => {
+  const {
+    firstName,
+    lastName,
+    pictureUrl,
+    role,
+    email,
+    lastLogin,
+    createdAt,
+    updatedAt,
+    isActive: isActiveVendor,
+  } = vendorDetails;
 
   return (
     <motion.div
-      className="flex p-4 bg-white shadow-md rounded-lg w-full max-w-5xl mx-auto"
+      className="flex flex-col md:flex-row p-4 bg-white shadow-md rounded-lg w-full max-w-5xl mx-auto"
       whileHover={{
         scale: 1.02,
         boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
       }}
     >
       {/* Vendor Information Section */}
-      <div className="flex-1 p-4 border-r">
-        <h3 className="text-xl font-bold mb-2">Vendor Information</h3>
+      <div className="flex-1 p-4 border-b md:border-b-0 md:border-r">
+        <h3 className="text-xl font-bold mb-4">Vendor Information</h3>
+
+        {/* Vendor Picture */}
+        {pictureUrl && (
+          <div className="mb-4">
+            <img
+              src={pictureUrl}
+              alt={`${firstName} ${lastName}`}
+              className="w-24 h-24 rounded-full object-cover shadow-md"
+            />
+          </div>
+        )}
+
+        {/* Vendor Name */}
         <div className="flex items-center mb-2">
           <FaUser className="text-gray-600 mr-2" />
-          <span>{/* {firstName} {lastName} */} Name of Vendor</span>
+          <span>
+            {firstName} {lastName}
+          </span>
         </div>
+        {/* Vednor Status */}
+        <div className="flex items-center mb-2">
+          <span className="text-gray-600 font-bold mr-2">Status:</span>
+          <span>{isActiveVendor ? "Active" : "Inactive"}</span>
+        </div>
+        {/* Vendor Email */}
         <div className="flex items-center mb-2">
           <FaEnvelope className="text-gray-600 mr-2" />
-          {/* <span>{email}</span> */} Email
+          <span>{email}</span>
         </div>
-        {/* {platforms.length > 0 && (
+
+        {/* Vendor Role */}
+        {role && (
+          <div className="flex items-center mb-2">
+            <FaBuilding className="text-gray-600 mr-2" />
+            <span>{role}</span>
+          </div>
+        )}
+
+        {/* Last Login */}
+        {lastLogin && (
+          <div className="flex items-center mb-2">
+            <FaCalendarAlt className="text-gray-600 mr-2" />
+            <span>Last Login: {new Date(lastLogin).toLocaleDateString()}</span>
+          </div>
+        )}
+
+        {/* Platforms */}
+        {platforms.length > 0 && (
           <div className="flex items-center mb-2">
             <span className="text-gray-600 font-bold mr-2">Platforms:</span>
             {platforms.map((platform, index) => (
@@ -33,65 +98,58 @@ const VendorInfo = ({ store }) => {
               </span>
             ))}
           </div>
-        )} */} platforms
-      </div>
-
-      {/* Company Information Section */}
-      <div className="flex-1 p-4 border-r flex flex-col items-center">
-        <h3 className="text-xl font-bold mb-2">Company Information</h3>
-        {/* {companyLogo && (
-          <div className="mb-2">
-            <img
-              src={companyLogo}
-              alt={`${companyName} Logo`}
-              className="w-16 h-16 rounded-full"
-            />
-          </div>
-        )} */}
-        <p>company logo</p>
-        <div className="flex items-center mb-2 justify-center">
-          <FaBuilding className="text-gray-600 mr-2" />
-          {/* <span>{companyName}</span> */} company name
-        </div>
-        {/* <p className="text-gray-600 mb-2">{companyDescription}</p> */}{" "}
-        company description
-        {/* {companyUrl && (
-          <div className="flex items-center mb-2">
-            <FaLink className="text-gray-600 mr-2" />
-            <a
-              href={companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              Visit Website
-            </a>
-          </div>
-        )} */}{" "}
-        company url
+        )}
       </div>
 
       {/* Store Information Section */}
       <div className="flex-1 p-4">
-        <h3 className="text-xl font-bold mb-2">Store Information</h3>
+        <h3 className="text-xl font-bold mb-4">Store Information</h3>
+
+        {/* Store Name */}
         <div className="flex items-center mb-2">
           <FaStore className="text-gray-600 mr-2" />
-          {/* <span>{companyName}</span> */} store name
+          <span>{name}</span>
         </div>
+
+        {/* Store description */}
+        <div className="flex items-center mb-2">
+          <FaAudioDescription className="text-gray-600 mr-2" />
+          <span>{description}</span>
+        </div>
+
+        {/* Store Status */}
         <div className="flex items-center mb-2">
           <span className="text-gray-600 font-bold mr-2">Status:</span>
-          {/* <span>{isActive ? "Active" : "Inactive"}</span> */} status
+          <span>{storeActive ? "Active" : "Inactive"}</span> {/* Corrected */}
         </div>
+
+        {/* Store Created At */}
         <div className="flex items-center mb-2">
+          <FaCalendarAlt className="text-gray-600 mr-2" />
           <span className="text-gray-600 font-bold mr-2">Created At:</span>
-          {/* <span>{new Date(createdAt).toLocaleDateString()}</span> */}{" "}
-          created at
+          <span>{new Date(createdAt).toLocaleDateString()}</span>
         </div>
+
+        {/* Store Updated At */}
         <div className="flex items-center mb-2">
+          <FaCalendarAlt className="text-gray-600 mr-2" />
           <span className="text-gray-600 font-bold mr-2">Updated At:</span>
-          {/* <span>{new Date(updatedAt).toLocaleDateString()}</span> */}{" "}
-          updated at
+          <span>{new Date(updatedAt).toLocaleDateString()}</span>
         </div>
+        {/* Website URL */}
+        {url && (
+          <div className="flex items-center mb-2">
+            <FaLink className="text-gray-600 mr-2" />
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {url}
+            </a>
+          </div>
+        )}
       </div>
     </motion.div>
   );

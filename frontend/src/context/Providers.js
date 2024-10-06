@@ -1,18 +1,18 @@
 import React from "react";
-import AppContext from "../context"; // GlobalContext
-import SidebarProvider from "./SidebarContext";
+import { AnalyticsProvider } from "./AnalyticsContext";
 import AuthProvider from "./AuthContext";
-import {AnalyticsProvider} from "./AnalyticsContext";
+import { GlobalProvider } from "./ContextAnalytics";
+import SidebarProvider from "./SidebarContext";
 
-const Providers = ({children}) => {
+const Providers = ({ children }) => {
   return (
-    <AppContext>
+    <GlobalProvider>
       <AuthProvider>
         <SidebarProvider>
           <AnalyticsProvider>{children}</AnalyticsProvider>
         </SidebarProvider>
       </AuthProvider>
-    </AppContext>
+    </GlobalProvider>
   );
 };
 
