@@ -21,7 +21,6 @@ import LoginPage from "./pages/LoginPage";
 
 // vendor layout
 import VendorLayout from "./layouts/vendor";
-import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
 // import VendorDashboard from "./pages/vendor/Dashboard";
 // import Products from "./pages/vendor/Products";
 
