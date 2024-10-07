@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { useSidebarContext } from "../context/SidebarContext";
 
 const Navbar = () => {
-  const { openSidebar } = useSidebarContext();
+  const { openSidebar, isSidebarOpen, closeSidebar } = useSidebarContext();
   const { user, logout } = useAuth();
   const [logoutLoading, setLogoutLoading] = useState(false);
 
@@ -42,7 +42,9 @@ const Navbar = () => {
         <motion.span
           className="flex transition ease-in-out animate-pulse cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
           whileHover={{ scale: 1.2 }} // Hover effect to enlarge icon
-          onClick={openSidebar}
+          onClick={() => {
+            isSidebarOpen ? closeSidebar() : openSidebar(); // Toggle based on the current state
+          }}
         >
           <FaAlignJustify className="h-5 w-5" />
         </motion.span>

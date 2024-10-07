@@ -1,3 +1,4 @@
+import debounce from "lodash.debounce"; // Install lodash.debounce for optimized performance
 import React, { useEffect } from "react";
 import { HiX } from "react-icons/hi";
 import { NavLink } from "react-router-dom";
@@ -7,25 +8,28 @@ import { useSidebarContext } from "../context/SidebarContext";
 const Sidebar = () => {
   const { isSidebarOpen, closeSidebar, openSidebar } = useSidebarContext();
 
-  // Add a hook to handle sidebar visibility on window resize
+  /**
+   * Handle window resize events - opens sidebar if on large screens,
+   * but do NOT auto-close on small screens. Let user control it manually on small screens.
+   */
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        openSidebar(); // Ensure sidebar is open on large screens
-      } else {
-        closeSidebar(); // Close sidebar on small screens
+    const handleResize = debounce(() => {
+      if (window.innerWidth >= 1024 && !isSidebarOpen) {
+        openSidebar(); // Automatically open sidebar on large screens
       }
-    };
+      // No auto-closing on small screens, manual control only!
+    }, 200); // Debounce time to avoid rapid firing of events
 
-    // Run once on component mount
+    // Call handleResize immediately on component mount
     handleResize();
 
-    // Add event listener to handle window resizing
+    // Attach resize event listener
     window.addEventListener("resize", handleResize);
 
-    // Cleanup on component unmount
+    // Clean up event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
-  }, [openSidebar, closeSidebar]);
+  }, [openSidebar, isSidebarOpen]);
+
 
   return (
     <div
@@ -35,12 +39,12 @@ const Sidebar = () => {
           ? "translate-x-0" // Sidebar visible
           : "-translate-x-full" // Sidebar hidden
       }`}
-      style={{ width: "220px" }} // Reduced width
+      style={{ width: "220px" }} // Sidebar width set for consistency
     >
       {/* Close Button for Small Screens */}
       <span
         className="absolute top-4 right-4 block cursor-pointer md:hidden"
-        onClick={closeSidebar}
+        onClick={closeSidebar} // Close sidebar when 'X' is clicked
       >
         <HiX className="h-6 w-6" />
       </span>

@@ -1,10 +1,10 @@
-import React, {useContext} from "react";
-import {AnalyticsContext} from "../../context/AnalyticsContext";
+import React, { useContext } from "react";
+import { FaDollarSign, FaShoppingCart } from "react-icons/fa";
+import { AnalyticsContext } from "../../context/AnalyticsContext";
 import MetricCard from "../common/MetricCard";
-import {FaDollarSign, FaShoppingCart} from "react-icons/fa";
 
 const DashboardMetrics = () => {
-  const {metrics} = useContext(AnalyticsContext);
+  const { metrics } = useContext(AnalyticsContext);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -18,13 +18,14 @@ const DashboardMetrics = () => {
         value={`$${metrics.totalRevenue ?? 0}`}
         icon={<FaDollarSign size={24} />}
       />
-      {metrics.vendors?.map((vendor) => {
+      {metrics.vendors?.map((vendor) => (
         <MetricCard
+          key={vendor.status} // Always add a unique key when rendering lists
           title={`${vendor.status} Vendors`}
-          value={`$${vendor.count ?? 0}`}
+          value={vendor.count ?? 0}
           icon={<FaDollarSign size={24} />}
-        />;
-      })}
+        />
+      ))}
     </div>
   );
 };

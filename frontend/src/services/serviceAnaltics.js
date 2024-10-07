@@ -1,12 +1,12 @@
 import axiosInstance from "../services/instantAxios";
 
-const analyticsService = {
+const serviceAnalytics = {
   getMetrics: async (queryParams) => {
     try {
       const response = await axiosInstance.get(
         `/analytics/metrics?${queryParams}`
       );
-      // console.log(response.data);
+    //   console.log(response.data);
 
       if (response.data.type === "Success") {
         return response.data.data;
@@ -23,7 +23,7 @@ const analyticsService = {
       const response = await axiosInstance.get(
         `/analytics/revenue-per-vendor?${queryParams}`
       );
-      console.log(response.data);
+    //   console.log(response.data);
 
       if (response.data.type === "Success") {
         return response.data.data;
@@ -35,12 +35,27 @@ const analyticsService = {
     }
   },
 
+  getOrders: async (queryParams) => {
+    try {
+      const response = await axiosInstance.get(`/orders?${queryParams}`);
+      //   console.log("orders", response.data);
+
+      if (response.data.type === "Success") {
+        return response.data.data;
+      } else {
+        throw new Error(response.data.message || "Unable to fetch orders");
+      }
+    } catch (error) {
+      throw error;
+    }
+  },
+
   getSalesdata: async (queryParams) => {
     try {
       const response = await axiosInstance.get(
         `/analytics/sales-trends?${queryParams}`
       );
-      // console.log(response.data);
+    //   console.log(response.data);
       if (response.data.type === "Success") {
         return response.data.data;
       } else {
@@ -56,6 +71,7 @@ const analyticsService = {
       const response = await axiosInstance.get(
         `/analytics/top-products?${queryParams}`
       );
+      console.log("top product", response.data.data);
 
       if (response.data.type === "Success") {
         return response.data.data;
@@ -82,4 +98,4 @@ const analyticsService = {
   },
 };
 
-export default analyticsService;
+export default serviceAnalytics;

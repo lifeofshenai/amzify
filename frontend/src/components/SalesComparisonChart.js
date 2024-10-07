@@ -20,27 +20,43 @@ ChartJS.register(
   Legend
 );
 
-const SalesComparisonChart = () => {
+// Utility function to format numbers with commas
+const formatNumberWithCommas = (number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const SalesComparisonChart = ({ salesData }) => {
+  // Check if salesData is defined
+  if (!salesData || !Array.isArray(salesData)) return null;
+
+  const sales = salesData.map((sale) => sale.monthlySales);
+  const labels = salesData.map((sale) => sale._id);
+
+  // Calculate earned values based on sales data (assuming 10% earnings)
+  const earned = sales.map((sale) => sale * 0.1);
+
   const data = {
-    labels: ["FEB", "MAR", "APR", "MAY", "JUN", "JUL"], // Labels for the months
+    labels: labels, // Dynamic labels from salesData
     datasets: [
       {
-        label: "Earned", // First line (Earned)
-        data: [10, 30, 20, 50, 30, 40], // Data points for "Earned"
+        label: "Earned", // Earned line
+        data: earned, // Dynamic earned data
         borderColor: "#f50057", // Tailwind 'pink-500'
         backgroundColor: "rgba(245, 0, 87, 0.1)", // Light pink for the fill
         tension: 0.5, // Curved line
         pointBackgroundColor: "#f50057", // Pink points
         fill: false, // No fill under the curve
+        borderWidth: 2, // Thicker line for visibility
       },
       {
-        label: "Sales", // Second line (Sales)
-        data: [30, 40, 20, 50, 30, 40], // Data points for "Sales"
+        label: "Sales", // Sales line
+        data: sales, // Dynamic sales data
         borderColor: "#ff9800", // Tailwind 'orange-500'
         backgroundColor: "rgba(255, 152, 0, 0.1)", // Light orange for the fill
         tension: 0.5, // Curved line
         pointBackgroundColor: "#ff9800", // Orange points
         fill: false, // No fill under the curve
+        borderWidth: 2, // Thicker line for visibility
       },
     ],
   };
@@ -50,10 +66,10 @@ const SalesComparisonChart = () => {
     maintainAspectRatio: false, // Important for responsiveness
     scales: {
       y: {
-        beginAtZero: false, // Start y-axis at the lowest value
+        beginAtZero: true, // Start y-axis at zero
         ticks: {
           callback: function (value) {
-            return value + "M"; // Adding 'M' to y-axis labels for millions
+            return formatNumberWithCommas(value) + "$"; // Adding '$' to y-axis labels
           },
         },
         grid: {
@@ -91,7 +107,9 @@ const SalesComparisonChart = () => {
         borderWidth: 1,
         callbacks: {
           label: function (tooltipItem) {
-            return tooltipItem.raw.toFixed(2) + "M"; // Custom tooltip format with 'M'
+            return `${tooltipItem.dataset.label}: ${formatNumberWithCommas(
+              Math.round(tooltipItem.raw)
+            )}$`; // Custom tooltip format with '$'
           },
         },
       },
@@ -101,10 +119,16 @@ const SalesComparisonChart = () => {
   return (
     <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px] bg-white rounded-lg shadow-md p-8">
       <div className="flex justify-between mb-2">
-        <h2 className="text-xl font-semibold">$102.5M</h2>
-        <span className="text-gray-500">6 months</span>
+        <h2 className="text-xl font-semibold">
+          $
+          {formatNumberWithCommas(
+            Math.round(sales.reduce((acc, val) => acc + val, 0))
+          )}{" "}
+          {/* Total Sales */}
+        </h2>
+        <span className="text-gray-500">{labels.length} months</span>
       </div>
-      <p className="text-sm text-gray-500 mb-2">Total Sales</p>
+      <p className="text-sm text-gray-500 mb-2">Total Sales and Earned</p>
       <div className="h-full pb-10">
         <Line data={data} options={options} />
       </div>
@@ -113,3 +137,4 @@ const SalesComparisonChart = () => {
 };
 
 export default SalesComparisonChart;
+  

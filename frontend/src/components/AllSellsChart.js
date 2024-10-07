@@ -1,3 +1,4 @@
+import React, { useRef } from "react"; // Add this to fix the 'useRef' error
 import {
   CategoryScale,
   Chart as ChartJS,
@@ -7,8 +8,7 @@ import {
   PointElement,
   Tooltip,
 } from "chart.js";
-import React, { useRef } from "react";
-import { Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2"; // Add this to fix the 'Line' component error
 
 // Register chart elements
 ChartJS.register(
@@ -20,28 +20,24 @@ ChartJS.register(
   Legend
 );
 
-const AllSellsChart = () => {
+const AllSellsChart = ({ salesData = [] }) => {
   const chartRef = useRef(null); // Reference to the chart instance
 
+  // Ensure salesData is an array before proceeding
+  const formattedSalesData = Array.isArray(salesData.sales)
+    ? salesData.sales
+    : [];
+
+  // Map sales data to the format needed by the chart
+  const labels = formattedSalesData.map((sale) => sale._id); // Extract month (e.g., '2024-07', '2024-08')
+  const sales = formattedSalesData.map((sale) => sale.monthlySales); // Extract monthly sales
+
   const data = {
-    labels: [
-      "5k",
-      "10k",
-      "15k",
-      "20k",
-      "25k",
-      "30k",
-      "35k",
-      "40k",
-      "45k",
-      "50k",
-      "55k",
-      "60k",
-    ],
+    labels: labels, // Months as labels
     datasets: [
       {
-        label: "Sales",
-        data: [20, 40, 50, 60, 64.36, 50, 45, 55, 60, 50, 45, 55], // Example data
+        label: "Monthly Sales",
+        data: sales, // Monthly sales values
         borderColor: "#3b82f6", // Tailwind 'blue-500'
         tension: 0.4, // Smooth line
         pointBackgroundColor: "#3b82f6", // Blue points
@@ -54,19 +50,17 @@ const AllSellsChart = () => {
           const { ctx, chartArea } = chart;
 
           if (!chartArea) {
-            // Return a fallback color if the chart is not yet initialized
             return null;
           }
 
-          // Create gradient
           const gradient = ctx.createLinearGradient(
             0,
             chartArea.top,
             0,
             chartArea.bottom
           );
-          gradient.addColorStop(0, "rgba(59, 130, 246, 0.5)"); // Starting blue shade
-          gradient.addColorStop(1, "rgba(59, 130, 246, 0)"); // Transparent at the bottom
+          gradient.addColorStop(0, "rgba(59, 130, 246, 0.5)");
+          gradient.addColorStop(1, "rgba(59, 130, 246, 0)");
 
           return gradient;
         },
@@ -76,13 +70,13 @@ const AllSellsChart = () => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Important for responsiveness
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return value + "%"; // Adding percentage to the y-axis labels
+            return value + "$"; // Add dollar sign for sales data
           },
         },
         grid: {
@@ -116,7 +110,7 @@ const AllSellsChart = () => {
         cornerRadius: 5, // Rounded tooltips
         callbacks: {
           label: function (tooltipItem) {
-            return tooltipItem.raw.toFixed(2) + "%"; // Custom tooltip format
+            return "$" + tooltipItem.raw.toFixed(2); // Custom tooltip format
           },
         },
       },
@@ -126,10 +120,11 @@ const AllSellsChart = () => {
   return (
     <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px] bg-white rounded-lg shadow-md p-6">
       <h2 className="text-lg font-semibold text-center mb-4">
-        All Sales Details
+        Monthly Sales Details
       </h2>
       <div className="h-full p-8">
-        <Line ref={chartRef} data={data} options={options} />
+        <Line ref={chartRef} data={data} options={options} />{" "}
+        {/* Use the Line component */}
       </div>
     </div>
   );

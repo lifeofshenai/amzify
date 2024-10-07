@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  FaCalendarAlt,
+  // FaCalendarAlt,
   FaEnvelope,
   FaExternalLinkAlt,
   FaUsers,
