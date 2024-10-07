@@ -50,7 +50,6 @@ export const cardData = [
   },
 ];
 
-
 export const DUMMY_DATA = {
   allVendors: [
     {
@@ -296,18 +295,16 @@ export const DUMMY_DATA = {
   ],
 };
 
-
-
 export const links = [
   {
     id: 1,
-    url: "/admin", 
+    url: "/admin",
     text: "Dashboard",
     icon: <FaHome />,
   },
   {
     id: 2,
-    url: "vendor", 
+    url: "vendor",
     text: "Vendor",
     icon: <FaUsers />,
   },
@@ -319,34 +316,34 @@ export const links = [
   },
   {
     id: 4,
-    url: "products", 
+    url: "products",
     text: "Products",
     icon: <FaBox />,
   },
-  {
-    id: 5,
-    url: "analytics", 
-    text: "Analytics",
-    icon: <FaChartLine />,
-  },
-  {
-    id: 6,
-    url: "settings", 
-    text: "Settings",
-    icon: <FaCog />,
-  },
+  // {
+  //   id: 5,
+  //   url: "analytics",
+  //   text: "Analytics",
+  //   icon: <FaChartLine />,
+  // },
+  // {
+  //   id: 6,
+  //   url: "settings",
+  //   text: "Settings",
+  //   icon: <FaCog />,
+  // },
 ];
 
 export const vendorLinks = [
   {
     id: 1,
-    url: "/vendor", 
+    url: "/vendor",
     text: "Dashboard",
     icon: <FaHome />,
   },
   {
     id: 2,
-    url: "products", 
+    url: "products",
     text: "Products",
     icon: <FaBox />,
   },
@@ -358,16 +355,16 @@ export const vendorLinks = [
   },
   {
     id: 4,
-    url: "analytics", 
+    url: "analytics",
     text: "Analytics",
     icon: <FaChartLine />,
   },
-  {
-    id: 5,
-    url: "settings", 
-    text: "Settings",
-    icon: <FaCog />,
-  },
+  // {
+  //   id: 5,
+  //   url: "settings",
+  //   text: "Settings",
+  //   icon: <FaCog />,
+  // },
 ];
 
 export const products = [
@@ -401,21 +398,21 @@ export const products = [
 
 // Initial chart data for the line chart
 export const initialChartData = {
-  labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+  labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
   datasets: [
     {
-      label: 'Earned',
+      label: "Earned",
       data: [20, 60, 45, 80, 55, 120], // Initial data points for Earned
-      borderColor: '#fc5185',
+      borderColor: "#fc5185",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
       pointRadius: 0,
     },
     {
-      label: 'Sales',
+      label: "Sales",
       data: [30, 50, 70, 90, 100, 130], // Initial data points for Sales
-      borderColor: '#ffb800',
+      borderColor: "#ffb800",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
@@ -426,21 +423,34 @@ export const initialChartData = {
 
 // Chart data for 1 year time range
 export const oneYearChartData = {
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  labels: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
   datasets: [
     {
-      label: 'Earned',
+      label: "Earned",
       data: [10, 50, 30, 70, 40, 90, 120, 60, 80, 110, 130, 150], // New data points for Earned
-      borderColor: '#fc5185',
+      borderColor: "#fc5185",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
       pointRadius: 0,
     },
     {
-      label: 'Sales',
+      label: "Sales",
       data: [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], // New data points for Sales
-      borderColor: '#ffb800',
+      borderColor: "#ffb800",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
@@ -451,21 +461,21 @@ export const oneYearChartData = {
 
 // Chart data for 2 years time range
 export const twoYearsChartData = {
-  labels: ['2022', '2023'],
+  labels: ["2022", "2023"],
   datasets: [
     {
-      label: 'Earned',
+      label: "Earned",
       data: [500, 1200], // Simpler data for 2-year range
-      borderColor: '#fc5185',
+      borderColor: "#fc5185",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
       pointRadius: 0,
     },
     {
-      label: 'Sales',
+      label: "Sales",
       data: [600, 1300], // Simpler data for 2-year range
-      borderColor: '#ffb800',
+      borderColor: "#ffb800",
       borderWidth: 3,
       tension: 0.4,
       fill: false,
@@ -484,7 +494,6 @@ export const saleSummaryData = {
     completed: 3,
   },
 };
-
 
 export const sampleTopProducts = [
   {
@@ -564,5 +573,4 @@ export const sampleTopProducts = [
     datePosted: "2024-01-01", // January
     availability: "In Stock",
   },
-
 ];

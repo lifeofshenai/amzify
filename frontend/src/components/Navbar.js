@@ -1,14 +1,14 @@
-import { motion } from "framer-motion"; // Import framer-motion
-import { useState } from "react";
-import { FaAlignJustify, FaSearch } from "react-icons/fa";
-import { IoMdNotificationsOutline } from "react-icons/io";
+import {motion} from "framer-motion"; // Import framer-motion
+import {useState} from "react";
+import {FaAlignJustify, FaSearch} from "react-icons/fa";
+import {IoMdNotificationsOutline} from "react-icons/io";
 import Dropdown from "../components/dropdown";
-import { useAuth } from "../context/AuthContext";
-import { useSidebarContext } from "../context/SidebarContext";
+import {useAuth} from "../context/AuthContext";
+import {useSidebarContext} from "../context/SidebarContext";
 
 const Navbar = () => {
-  const { openSidebar, isSidebarOpen, closeSidebar } = useSidebarContext();
-  const { user, logout } = useAuth();
+  const {openSidebar, isSidebarOpen, closeSidebar} = useSidebarContext();
+  const {user, logout} = useAuth();
   const [logoutLoading, setLogoutLoading] = useState(false);
 
   // Handle logout functionality
@@ -28,20 +28,20 @@ const Navbar = () => {
   return (
     <motion.nav
       className={`navbar sticky top-4 z-40 flex justify-stretch items-center mt-2 w-full bg-base-100 rounded-lg bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]`}
-      initial={{ opacity: 0, y: -20 }} // Start from offscreen
-      animate={{ opacity: 1, y: 0 }} // Slide down and fade in
-      transition={{ duration: 0.5, ease: "easeOut" }} // Smooth transition
+      initial={{opacity: 0, y: -20}} // Start from offscreen
+      animate={{opacity: 1, y: 0}} // Slide down and fade in
+      transition={{duration: 0.5, ease: "easeOut"}} // Smooth transition
     >
       <motion.div
         className="relative mt-[3px] h-[65px] flex flex-grow items-center justify-around gap-2 rounded-full bg-base-100 px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[1080px] md:flex-grow-0 md:gap-1 xl:w-[1080px] xl:gap-2"
-        initial={{ opacity: 0, scale: 0.9 }} // Slightly scaled down initially
-        animate={{ opacity: 1, scale: 1 }} // Scale up to normal size
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        initial={{opacity: 0, scale: 0.9}} // Slightly scaled down initially
+        animate={{opacity: 1, scale: 1}} // Scale up to normal size
+        transition={{duration: 0.3, ease: "easeOut"}}
       >
         {/* Sidebar Toggle Button */}
         <motion.span
           className="flex transition ease-in-out animate-pulse cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
-          whileHover={{ scale: 1.2 }} // Hover effect to enlarge icon
+          whileHover={{scale: 1.2}} // Hover effect to enlarge icon
           onClick={() => {
             isSidebarOpen ? closeSidebar() : openSidebar(); // Toggle based on the current state
           }}
@@ -50,7 +50,7 @@ const Navbar = () => {
         </motion.span>
 
         {/* Search Bar */}
-        <motion.div
+        {/* <motion.div
           className="flex border h-full items-center rounded-full bg-light text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]"
           initial={{ x: -50, opacity: 0 }} // Slide in from left
           animate={{ x: 0, opacity: 1 }} // Slide to original position
@@ -64,15 +64,15 @@ const Navbar = () => {
             placeholder="Search..."
             className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-gray-400 dark:bg-navy-900 dark:text-white dark:placeholder:!text-white sm:w-fit"
           />
-        </motion.div>
+        </motion.div> */}
 
         {/* Notification Icon */}
         <Dropdown
           button={
             <motion.div
               className="relative cursor-pointer"
-              whileHover={{ rotate: [0, 10, -10, 0] }} // Rotation animation on hover
-              transition={{ type: "spring", stiffness: 300 }}
+              whileHover={{rotate: [0, 10, -10, 0]}} // Rotation animation on hover
+              transition={{type: "spring", stiffness: 300}}
             >
               <IoMdNotificationsOutline className="h-5 w-5 rounded-lg shadow-lg text-gray-600 dark:text-white" />
             </motion.div>
@@ -99,8 +99,8 @@ const Navbar = () => {
           button={
             <motion.div
               className="flex items-center space-x-3"
-              whileHover={{ scale: 1.05 }} // Hover effect for profile section
-              transition={{ type: "spring", stiffness: 150 }}
+              whileHover={{scale: 1.05}} // Hover effect for profile section
+              transition={{type: "spring", stiffness: 150}}
             >
               <img
                 className="rounded-full btn btn-ghost btn-circle avatar"
@@ -138,12 +138,12 @@ const Navbar = () => {
                 >
                   Profile Settings
                 </a>
-                <a
+                {/* <a
                   href=" "
                   className="mt-3 text-sm text-gray-800 dark:text-white hover:dark:text-white"
                 >
                   Newsletter Settings
-                </a>
+                </a> */}
                 <button
                   onClick={handleLogout}
                   disabled={logoutLoading}

@@ -38,9 +38,9 @@ function App() {
         }
       >
         {/* <Route index element={<Dashboard />} /> */}
-        <Route index element={<AnalyticsDashboard />} />
+        <Route index element={<Analytics />} />
 
-        <Route path="analytics" element={<Analytics />} />
+        {/* <Route path="analytics" element={<Analytics />} /> */}
         {/* <Route path="analytics-dashboard" element={<AnalyticsDashboard />} /> */}
         <Route path="vendor" element={<VendorManagement />} />
         <Route path="vendor/add-vendor" element={<AddVendor />} />
