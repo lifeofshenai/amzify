@@ -1,15 +1,15 @@
-import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import {motion} from "framer-motion";
+import React, {useEffect, useState} from "react";
 import Loader from "../../components/Loader";
 import SalesComparisonChart from "../../components/SalesComparisonChart";
 import SalesTable from "../../components/SalesTable";
 import VendorInfo from "../../components/VendorInfo";
 import axiosInstance from "../../services/instantAxios";
-import { useParams } from "react-router-dom";
-import { useGlobalContext } from "../../context/ContextAnalytics";
+import {useParams} from "react-router-dom";
+import {useGlobalContext} from "../../context/ContextAnalytics";
 
 const Vendor = () => {
-  const { vendorId } = useParams();
+  const {vendorId} = useParams();
 
   // Local state for vendor-specific data
   const [vendorData, setVendorData] = useState(null);
@@ -32,7 +32,7 @@ const Vendor = () => {
         setLoading(true);
         const response = await axiosInstance.get(`/vendors/${vendorId}`);
         setVendorData(response.data.data.store);
-        fetchAnalytics(`?vendorId=${vendorId}`); // Query vendor-specific analytics
+        fetchAnalytics(`vendorId=${vendorId}`); // Query vendor-specific analytics
       } catch (err) {
         setError(
           err.response?.data?.message || err.message || "An error occurred"
@@ -48,11 +48,11 @@ const Vendor = () => {
   // Conditional render function for error or loader
   const renderContent = () => {
     if (loading) {
-      return <Loader />; 
+      return <Loader />;
     }
 
     if (error) {
-      return <div className="text-red-600 p-4">{`Error: ${error}`}</div>; 
+      return <div className="text-red-600 p-4">{`Error: ${error}`}</div>;
     }
 
     if (!vendorData) {
@@ -65,9 +65,9 @@ const Vendor = () => {
   return (
     <motion.div
       className="flex flex-col items-center p-4 bg-gray-100 min-h-screen"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
+      initial={{opacity: 0}}
+      animate={{opacity: 1}}
+      transition={{duration: 0.5}}
     >
       {/* Vendor Info Card */}
       <motion.div
@@ -76,7 +76,7 @@ const Vendor = () => {
           scale: 1.02,
           boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
         }}
-        transition={{ duration: 0.3 }}
+        transition={{duration: 0.3}}
       >
         {renderContent()} {/* Render vendor data, loader, or error */}
       </motion.div>
@@ -88,7 +88,7 @@ const Vendor = () => {
           scale: 1.02,
           boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
         }}
-        transition={{ duration: 0.3 }}
+        transition={{duration: 0.3}}
       >
         {globalLoading ? (
           <Loader /> // Global loading spinner for sales data
@@ -106,7 +106,7 @@ const Vendor = () => {
           scale: 1.02,
           boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
         }}
-        transition={{ duration: 0.3 }}
+        transition={{duration: 0.3}}
       >
         <SalesTable
           productPerformance={productPerformance.topProducts}

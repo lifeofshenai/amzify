@@ -7,6 +7,37 @@ import ErrorResponse from "../../utils/error";
 
 class AnalyticsService {
   /**
+   * Calculate Total orders across all platforms or specific platforms
+   * @param platformFilter - Optional array of platforms to filter (e.g., ['shopify', 'amazon'])
+   */
+  async getTotalOrders(platformFilter?: string[]): Promise<number> {
+    try {
+      const match: any = {};
+
+      if (platformFilter && platformFilter.length > 0) {
+        match.platform = {$in: platformFilter};
+      }
+
+      const result = await Order.aggregate([
+        {$match: match},
+        {
+          $group: {
+            _id: null,
+            count: {$sum: 1},
+          },
+        },
+      ]);
+
+      return result[0]?.count || 0;
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        error.message
+      );
+    }
+  }
+
+  /**
    * Calculate Total GMV (Gross Merchandise Volume) across all platforms or specific platforms
    * @param platformFilter - Optional array of platforms to filter (e.g., ['shopify', 'amazon'])
    */

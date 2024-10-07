@@ -18,6 +18,7 @@ class AnalyticsController {
         : undefined;
 
       const totalGMV = await AnalyticsService.getTotalGMV(platformsArray);
+      const totalOrders = await AnalyticsService.getTotalOrders(platformsArray);
       const totalRevenue = await AnalyticsService.getTotalRevenue(
         10,
         platformsArray
@@ -26,7 +27,7 @@ class AnalyticsController {
       sendSuccessResponse(
         res,
         HTTP_STATUS.OK_200,
-        {totalGMV, totalRevenue, vendors: status},
+        {totalGMV, totalRevenue, totalOrders, vendors: status},
         "Metrics retrieved successfully"
       );
     } catch (error: any) {

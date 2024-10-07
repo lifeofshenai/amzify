@@ -14,11 +14,11 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 // import RevenueChart from "../../components/RevenueChart";
 import RevenueTable from "../../components/RevenueTable";
 import SalesComparisonChart from "../../components/SalesComparisonChart";
-import { useGlobalContext } from "../../context/ContextAnalytics";
+import {useGlobalContext} from "../../context/ContextAnalytics";
 
 const Analytics = () => {
   // Access data from the global context
-  const { metrics, vendorPerformance, salesData, loading, error } =
+  const {metrics, vendorPerformance, salesData, loading, error} =
     useGlobalContext();
 
   const cardData = [
@@ -30,7 +30,7 @@ const Analytics = () => {
           ? metrics.vendors[0].count
           : 0,
       icon: <FaUsers className="text-blue-500" size={24} />,
-      growth: "8.5% Up from yesterday",
+      // growth: "8.5% Up from yesterday",
       growthIcon: <FaArrowUp className="text-green-600" />,
       bgColor: "bg-blue-100",
     },
@@ -41,7 +41,7 @@ const Analytics = () => {
         ? metrics.totalOrders.toLocaleString() // Format with commas
         : 0, // Fallback if totalOrders is not available
       icon: <FaClipboardList className="text-yellow-500" size={24} />,
-      growth: "1.3% Up from past week",
+      // growth: "1.3% Up from past week",
       growthIcon: <FaArrowRight className="text-green-600" />,
       bgColor: "bg-yellow-100",
     },
@@ -52,7 +52,7 @@ const Analytics = () => {
         ? `$${Math.round(metrics.totalRevenue).toLocaleString()}` // Format as currency
         : "$0", // Fallback if totalRevenue is not available
       icon: <FaDollarSign className="text-green-500" size={24} />,
-      growth: "4.3% Down from yesterday",
+      // growth: "4.3% Down from yesterday",
       growthIcon: <FaArrowUp className="text-green-600" />,
       bgColor: "bg-green-100",
     },
@@ -63,7 +63,7 @@ const Analytics = () => {
         ? `$${Math.round(metrics.totalGMV).toLocaleString()}` // Format as currency
         : "$0", // Fallback if totalGMV is not available
       icon: <FaHourglassHalf className="text-red-500" size={24} />,
-      growth: "1.8% Up from yesterday",
+      // growth: "1.8% Up from yesterday",
       growthIcon: <FaArrowRight className="text-red-600" />,
       bgColor: "bg-red-100",
     },
