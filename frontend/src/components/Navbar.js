@@ -49,51 +49,6 @@ const Navbar = () => {
           <FaAlignJustify className="h-5 w-5" />
         </motion.span>
 
-        {/* Search Bar */}
-        {/* <motion.div
-          className="flex border h-full items-center rounded-full bg-light text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]"
-          initial={{ x: -50, opacity: 0 }} // Slide in from left
-          animate={{ x: 0, opacity: 1 }} // Slide to original position
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          <p className="pl-3 pr-2 text-xl">
-            <FaSearch className="h-4 w-4 text-gray-400 dark:text-white" />
-          </p>
-          <input
-            type="text"
-            placeholder="Search..."
-            className="block h-full w-full rounded-full bg-lightPrimary text-sm font-medium text-navy-700 outline-none placeholder:!text-gray-400 dark:bg-navy-900 dark:text-white dark:placeholder:!text-white sm:w-fit"
-          />
-        </motion.div> */}
-
-        {/* Notification Icon */}
-        <Dropdown
-          button={
-            <motion.div
-              className="relative cursor-pointer"
-              whileHover={{rotate: [0, 10, -10, 0]}} // Rotation animation on hover
-              transition={{type: "spring", stiffness: 300}}
-            >
-              <IoMdNotificationsOutline className="h-5 w-5 rounded-lg shadow-lg text-gray-600 dark:text-white" />
-            </motion.div>
-          }
-          children={
-            <div className="flex w-[360px] flex-col gap-3 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none sm:w-[460px]">
-              {/* Notification Content */}
-              <div className="flex items-center justify-between">
-                <p className="text-base font-bold text-navy-700 dark:text-white">
-                  Notification
-                </p>
-                <p className="text-sm font-bold text-navy-700 dark:text-white">
-                  Mark all read
-                </p>
-              </div>
-              {/* More Notification Items */}
-            </div>
-          }
-          classNames={"py-2 top-4 -left-[230px] md:-left-[440px] w-max"}
-        />
-
         {/* User Profile Section */}
         <Dropdown
           button={

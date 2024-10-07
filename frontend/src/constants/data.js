@@ -305,7 +305,7 @@ export const links = [
   {
     id: 2,
     url: "vendor",
-    text: "Vendor",
+    text: "Vendors",
     icon: <FaUsers />,
   },
   {
