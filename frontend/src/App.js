@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./layouts/admin";
 
@@ -6,6 +6,7 @@ import AdminLayout from "./layouts/admin";
 import AddVendor from "./pages/admin/AddVendorForm";
 import Analytics from "./pages/admin/Analytics";
 import Dashboard from "./pages/admin/Dashboard";
+import Orders from "./pages/admin/Orders";
 import Product from "./pages/admin/Product";
 import VendorManagement from "./pages/admin/VendorManagement";
 import ViewVendorProfile from "./pages/admin/VendorProfile";
@@ -49,6 +50,7 @@ function App() {
           element={<ViewVendorProfile />}
         />
         <Route path="products" element={<Product />} />
+        <Route path="orders" element={<Orders />} />
       </Route>
 
       {/* Vendor Routes */}
