@@ -1,3 +1,5 @@
+// src/services/instantAxios.js
+
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -5,7 +7,6 @@ import Cookies from "js-cookie";
 const axiosInstance = axios.create({
   baseURL:
     process.env.REACT_APP_API_URL || "https://amzify-api.onrender.com/api/v1",
-  // withCredentials: true,
   headers: {
     "Content-Type": "application/json",
   },
@@ -31,11 +32,11 @@ axiosInstance.interceptors.response.use(
   (response) => {
     return response;
   },
-  async (error) => {
-    if (error.response.status === 401) {
+  (error) => {
+    if (error.response && error.response.status === 401) {
       // If unauthorized, handle token expiration or invalid token
       console.log("Unauthorized! Redirecting to login.");
-      // Optionally, clear cookies and redirect to login
+      // Clear cookies and redirect to login
       Cookies.remove("authToken");
       window.location.href = "/";
     }

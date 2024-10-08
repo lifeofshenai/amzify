@@ -1,79 +1,64 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { FaCartPlus, FaMoneyBillWave } from "react-icons/fa";
-import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 
-// Utility function to format numbers with commas
-const formatNumberWithCommas = (number) => {
-  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-const SalesTable = ({ productPerformance = [], loading }) => {
-  // If loading is true, show a loader animation
-  if (loading) {
+const SalesTable = React.memo(({ topProduct }) => {
+  if (
+    !topProduct ||
+    !topProduct.topProducts ||
+    topProduct.topProducts.length === 0
+  ) {
+   
     return (
-      <div className="w-full flex justify-center items-center py-10">
-        <motion.div
-          className="loader"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
-    );
-  }
-
-  // If no data is available, show a message
-  if (!productPerformance.length) {
-    return (
-      <p className="text-gray-600 text-center py-4">
+      <div className="p-4 text-gray-600">
         No product performance data available.
-      </p>
+      </div>
     );
   }
 
   return (
-    <div className="w-full bg-white p-4 rounded-lg shadow-md">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-xl font-semibold">Product Performance</h2>
-      </div>
-
+    <div className="p-2">
       <div className="overflow-x-auto">
-        <table className="w-full table-auto">
+        <table className="table w-full">
           <thead>
-            <tr className="text-left text-gray-500">
-              <th className="pb-2">Product Name</th>
-              <th className="pb-2">Total Sales</th>
-              <th className="pb-2">Total Quantity</th>
+            <tr>
+              <th className="bg-dark-pink font-bold text-white">Product</th>
+              <th className="bg-dark-pink font-bold text-white">Sales</th>
+              <th className="bg-dark-pink font-bold text-white">Earned</th>
             </tr>
           </thead>
           <tbody>
-            {productPerformance.map((item, index) => (
-              <tr key={index} className="border-t">
-                <td className="py-2">
-                  <div className="flex items-center">
-                    <FaCartPlus className="text-green-500 mr-2" />
-                    {item.productName}
-                  </div>
+            {topProduct.topProducts.map((product, index) => (
+              <motion.tr
+                key={product._id || index}
+                whileHover={{ scale: 1.03 }}
+                className={`${
+                  index % 2 === 0 ? "bg-white" : "bg-slate-200"
+                } hover:bg-gray-100 font-medium`}
+              >
+                {/* Product Name */}
+                <td className="p-4">
+                  <div>{product.productName}</div>
                 </td>
-                <td className="py-2">
-                  <div className="flex items-center">
-                    <FaMoneyBillWave className="text-orange-500 mr-2" />$
-                    {formatNumberWithCommas(Math.round(item.totalSales))}
-                  </div>
+
+                {/* Sales Count */}
+                <td className="p-4">
+                  <FaCartPlus className="inline-block text-green-500 mr-2" />
+                  {product.totalQuantity}
                 </td>
-                <td className="py-2">
-                  <div className="flex items-center">
-                    <MdOutlineProductionQuantityLimits className="text-blue-500 mr-2" />
-                    {formatNumberWithCommas(item.totalQuantity)}
-                  </div>
+
+                {/* Earned Amount */}
+                <td className="p-4">
+                  <FaMoneyBillWave className="inline-block text-yellow-500 mr-2" />
+                  {product.totalSales}$
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>
       </div>
     </div>
   );
-};
+});
 
 export default SalesTable;

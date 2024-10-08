@@ -32,9 +32,9 @@ const AdminLayout = () => {
       <Sidebar />
 
       {/* Main Content */}
-      <div className="h-full w-full bg-lightPrimary dark:bg-navy-900">
+      <div className="h-full w-full bg-zinc-50">
         {/* Main Area */}
-        <main className="mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[260px]">
+        <main className="mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[210px]">
           <div className="h-full">
             {/* Navbar */}
             <Navbar />

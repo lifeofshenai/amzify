@@ -49,12 +49,19 @@ const LoginPage = () => {
     <div className="main-layout">
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         {/* Card starts here */}
-        <div className="card w-full max-w-md bg-white shadow-lg shadow-pink-600 p-4">
+        <div className="card w-full max-w-md bg-white shadow-lg shadow-pink-600 p-6 rounded-lg">
           <div className="card-body">
             {/* AMZIFY Logo and Description */}
-            <div className="text-center">
-              <h1 className="text-4xl font-bold text-pink-700">AMZIFY</h1>
-              <p className="mt-2 text-gray-600">Login to your account.</p>
+            <div className="text-center mb-6">
+              {/* Logo */}
+              <img
+                src="/AMZIFY.png"
+                alt="Amzify Logo"
+                className="mx-auto w-48 h-auto"
+              />
+              <p className="mt-2 text-gray-600 text-lg font-semibold">
+                Login to your account.
+              </p>
             </div>
 
             {/* Form */}

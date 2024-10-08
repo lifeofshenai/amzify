@@ -1,6 +1,6 @@
 import {
+  Chart as ChartJS, 
   CategoryScale,
-  Chart as ChartJS,
   Legend,
   LinearScale,
   LineElement,
@@ -12,10 +12,10 @@ import { Line } from "react-chartjs-2";
 
 // Register chart elements
 ChartJS.register(
-  LineElement,
   CategoryScale,
   LinearScale,
   PointElement,
+  LineElement,
   Tooltip,
   Legend
 );
@@ -25,92 +25,71 @@ const formatNumberWithCommas = (number) => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-const SalesComparisonChart = ({ salesData }) => {
-  // Check if salesData is defined
-  if (!salesData || !Array.isArray(salesData)) return null;
+const SalesComparisonChart = React.memo(({ salesData }) => {
+  if (!salesData || !salesData.sales || salesData.sales.length === 0)
+    return null;
 
-  const sales = salesData.map((sale) => sale.monthlySales);
-  const labels = salesData.map((sale) => sale._id);
-
-  // Calculate earned values based on sales data (assuming 10% earnings)
+  const sales = salesData.sales.map((sale) => sale.monthlySales);
+  const labels = salesData.sales.map((sale) => sale._id);
   const earned = sales.map((sale) => sale * 0.1);
 
   const data = {
-    labels: labels, // Dynamic labels from salesData
+    labels,
     datasets: [
       {
-        label: "Earned", // Earned line
-        data: earned, // Dynamic earned data
-        borderColor: "#f50057", // Tailwind 'pink-500'
-        backgroundColor: "rgba(245, 0, 87, 0.1)", // Light pink for the fill
-        tension: 0.5, // Curved line
-        pointBackgroundColor: "#f50057", // Pink points
-        fill: false, // No fill under the curve
-        borderWidth: 2, // Thicker line for visibility
+        label: "Earned",
+        data: earned,
+        borderColor: "#f50057",
+        backgroundColor: "rgba(245, 0, 87, 0.1)",
+        tension: 0.5,
+        pointBackgroundColor: "#f50057",
+        fill: false,
+        borderWidth: 2,
       },
       {
-        label: "Sales", // Sales line
-        data: sales, // Dynamic sales data
-        borderColor: "#ff9800", // Tailwind 'orange-500'
-        backgroundColor: "rgba(255, 152, 0, 0.1)", // Light orange for the fill
-        tension: 0.5, // Curved line
-        pointBackgroundColor: "#ff9800", // Orange points
-        fill: false, // No fill under the curve
-        borderWidth: 2, // Thicker line for visibility
+        label: "Sales",
+        data: sales,
+        borderColor: "#ff9800",
+        backgroundColor: "rgba(255, 152, 0, 0.1)",
+        tension: 0.5,
+        pointBackgroundColor: "#ff9800",
+        fill: false,
+        borderWidth: 2,
       },
     ],
   };
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Important for responsiveness
+    maintainAspectRatio: false,
     scales: {
       y: {
-        beginAtZero: true, // Start y-axis at zero
+        beginAtZero: true,
         ticks: {
           callback: function (value) {
-            return formatNumberWithCommas(value) + "$"; // Adding '$' to y-axis labels
+            return formatNumberWithCommas(value) + "$";
           },
         },
-        grid: {
-          display: true,
-          borderColor: "#e5e7eb", // Light grid lines (gray-200)
-        },
+        grid: { borderColor: "#e5e7eb" },
       },
-      x: {
-        grid: {
-          display: false, // No vertical grid lines
-        },
-      },
+      x: { grid: { display: false } },
     },
     plugins: {
       legend: {
-        display: true, // Show the legend
+        display: true,
         position: "top",
-        labels: {
-          usePointStyle: true, // Use points for the labels
-          boxWidth: 6,
-        },
+        labels: { usePointStyle: true, boxWidth: 6 },
       },
       tooltip: {
-        backgroundColor: "#ffffff", // White background for tooltips
-        titleColor: "#000000", // Title in black
-        titleFont: {
-          weight: "bold",
-        },
-        bodyColor: "#000000", // Black text
-        bodyFont: {
-          size: 12,
-        },
-        cornerRadius: 4, // Rounded tooltips
-        borderColor: "#ddd", // Tooltip border
+        backgroundColor: "#ffffff",
+        titleColor: "#000000",
+        bodyColor: "#000000",
         borderWidth: 1,
         callbacks: {
-          label: function (tooltipItem) {
-            return `${tooltipItem.dataset.label}: ${formatNumberWithCommas(
+          label: (tooltipItem) =>
+            `${tooltipItem.dataset.label}: ${formatNumberWithCommas(
               Math.round(tooltipItem.raw)
-            )}$`; // Custom tooltip format with '$'
-          },
+            )}$`,
         },
       },
     },
@@ -118,23 +97,10 @@ const SalesComparisonChart = ({ salesData }) => {
 
   return (
     <div className="w-full h-[300px] sm:h-[350px] lg:h-[400px] bg-white rounded-lg shadow-md p-8">
-      <div className="flex justify-between mb-2">
-        <h2 className="text-xl font-semibold">
-          $
-          {formatNumberWithCommas(
-            Math.round(sales.reduce((acc, val) => acc + val, 0))
-          )}{" "}
-          {/* Total Sales */}
-        </h2>
-        <span className="text-gray-500">{labels.length} months</span>
-      </div>
-      <p className="text-sm text-gray-500 mb-2">Total Sales and Earned</p>
-      <div className="h-full pb-10">
-        <Line data={data} options={options} />
-      </div>
+      <Line data={data} options={options} />
     </div>
   );
-};
+});
 
 export default SalesComparisonChart;
-  
+

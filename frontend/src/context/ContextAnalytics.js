@@ -1,20 +1,21 @@
-import React, {createContext, useCallback, useEffect, useState} from "react";
-import analyticsService from "../services/serviceAnaltics";
+// src/context/ContextAnalytics.js
+
+import React, { createContext, useState, useEffect } from "react";
+import serviceAnalytics from "../services/serviceAnalytics";
 
 // Create Global Context
 export const GlobalContext = createContext();
 
-// Create the Global Provider
-export const GlobalProvider = ({children}) => {
-  // Define state for the metrics, vendor performance, sales data, and product performance
-  const [metrics, setMetrics] = useState({
-    totalSales: 0,
-    totalRevenue: 0,
-  });
+// Custom hook to use the GlobalContext
+export const useGlobalContext = () => React.useContext(GlobalContext);
 
+// Create the Global Provider
+export const GlobalProvider = ({ children }) => {
+  const [metrics, setMetrics] = useState({ totalSales: 0, totalRevenue: 0 });
   const [vendorPerformance, setVendorPerformance] = useState([]);
   const [productPerformance, setProductPerformance] = useState([]);
-  const [salesData, setSalesData] = useState({labels: [], data: []});
+  const [salesData, setSalesData] = useState({ labels: [], data: [] });
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -25,37 +26,51 @@ export const GlobalProvider = ({children}) => {
     try {
       const [metricsRes, vendorsRes, salesRes, productsRes] = await Promise.all(
         [
-          analyticsService.getMetrics(queryParams),
-          analyticsService.getVendorRevenue(queryParams),
-          analyticsService.getSalesdata(queryParams),
-          analyticsService.getTopProducts(queryParams),
+          serviceAnalytics.getMetrics(queryParams),
+          serviceAnalytics.getVendorRevenue(queryParams),
+          serviceAnalytics.getSalesData(queryParams),
+          serviceAnalytics.getTopProducts(queryParams),
         ]
       );
 
-      // console.log("vendorsRes Data Response:", vendorsRes);
-      // console.log("product performance",productPerformance);
-      // Set data or fallback values
-      setMetrics(metricsRes || {totalSales: 0, totalRevenue: 0});
+      setMetrics(metricsRes || { totalSales: 0, totalRevenue: 0 });
       setVendorPerformance(
-        Array.isArray(vendorsRes.revenueData) ? vendorsRes : []
+        vendorsRes && Array.isArray(vendorsRes.revenueData)
+          ? vendorsRes.revenueData
+          : []
       );
-      setSalesData(salesRes || {labels: [], data: []});
+      setSalesData(salesRes || { labels: [], data: [] });
       setProductPerformance(
-        Array.isArray(productsRes.topProducts) ? productsRes : []
+        productsRes && Array.isArray(productsRes.topProducts)
+          ? productsRes.topProducts
+          : []
       );
-    } catch (error) {
-      console.error("Error fetching analytics data:", error);
+    } catch (err) {
       setError("Failed to fetch analytics data");
     } finally {
       setLoading(false);
     }
   };
 
+  // Fetch orders data function
+  const fetchOrders = async (queryParams = "") => {
+    setLoading(true);
+    setError(null);
+    try {
+      const ordersRes = await serviceAnalytics.getOrders(queryParams);
+      setOrders(ordersRes || []);
+    } catch (err) {
+      setError("Failed to fetch orders data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // Fetch analytics data on component mount
+    fetchOrders();
     fetchAnalytics();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   return (
     <GlobalContext.Provider
@@ -64,7 +79,9 @@ export const GlobalProvider = ({children}) => {
         vendorPerformance,
         productPerformance,
         salesData,
+        orders,
         fetchAnalytics,
+        fetchOrders,
         loading,
         error,
       }}
@@ -73,6 +90,3 @@ export const GlobalProvider = ({children}) => {
     </GlobalContext.Provider>
   );
 };
-
-// Custom hook to use the GlobalContext
-export const useGlobalContext = () => React.useContext(GlobalContext);

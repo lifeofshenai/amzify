@@ -1,13 +1,16 @@
-import { createContext, useContext, useState, useEffect } from "react";
+// src/context/AuthContext.js
+
+import Cookies from "js-cookie";
+import {jwtDecode} from "jwt-decode"; // Corrected import
+import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import authService from "../services/authService";
-import Cookies from "js-cookie"; 
 import { toast } from "react-toastify";
-import {jwtDecode }from "jwt-decode"; 
+import authService from "../services/authService";
 
 // Create context for authentication
 const AuthContext = createContext();
 
+// Custom hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
@@ -17,37 +20,44 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // Function to login the user
-const login = async (email, password) => {
-  try {
-    const { user, token } = await authService.login(email, password); // Retrieve user and token
+  const login = async (email, password) => {
+    try {
+      const { user, token } = await authService.login(email, password); // Retrieve user and token
 
-    // Store user in state
-    setUser(user);
-    setRole(user.role);
+      // Store user in state
+      setUser(user);
+      setRole(user.role);
 
-    // Store token in cookies (you may want to use HttpOnly for security in production)
-    Cookies.set("authToken", token, { expires: 1 }); // Token expires in 1 day
+      // Store token in cookies (handled here to centralize token management)
+      Cookies.set("authToken", token, { expires: 1 }); // Token expires in 1 day
 
-    // Return user data (no need to throw any errors after success)
-    return { user, role: user.role };
-  } catch (error) {
-    console.error("Login failed:", error);
-    // Handle the error gracefully
-    throw new Error(
-      error?.response?.data?.message || "Login failed, please try again."
-    );
-  }
-};
+      // Optionally, navigate to a protected route or dashboard
+      navigate("/dashboard"); // Change "/dashboard" to your desired route
 
+      // Return user data
+      return { user, role: user.role };
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle the error gracefully
+      toast.error(error.message || "Login failed, please try again.");
+      throw error; // Re-throw to allow further handling if needed
+    }
+  };
 
   // Function to check if user is already logged in via cookies
   useEffect(() => {
     const token = Cookies.get("authToken");
     if (token) {
-      // Decode token and get user information from it
-      const decoded = jwtDecode(token);
-      setUser(decoded);
-      setRole(decoded.role);
+      try {
+        // Decode token and get user information from it
+        const decoded = jwtDecode(token);
+        setUser(decoded);
+        setRole(decoded.role);
+      } catch (decodeError) {
+        console.error("Token decoding failed:", decodeError);
+        // If token is invalid, remove it
+        Cookies.remove("authToken");
+      }
     }
     setLoading(false);
   }, []);
@@ -61,7 +71,6 @@ const login = async (email, password) => {
 
       // Clear cookies and redirect
       Cookies.remove("authToken");
-
       navigate("/");
       toast.success("Logged out successfully!");
     } catch (error) {

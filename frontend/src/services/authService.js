@@ -1,5 +1,6 @@
-import Cookies from "js-cookie";
-import axiosInstance from "../services/instantAxios";
+// src/services/authService.js
+
+import axiosInstance from "./instantAxios";
 
 const authService = {
   // Login user and return user data and token
@@ -9,32 +10,36 @@ const authService = {
         email,
         password,
       });
+
       if (response.data.type === "Success") {
         const { user, token } = response.data.data;
-
-        // Store the token in cookies
-        Cookies.set("authToken", token, { expires: 1 }); // Expires in 1 day
+        // Token is already handled by AuthContext; avoid setting cookies here to prevent duplication
         return { user, token };
       } else {
         throw new Error(response.data.message || "Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
-      throw error;
+      // Extract meaningful error messages
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        throw new Error(error.response.data.message);
+      }
+      throw new Error("An error occurred during login.");
     }
   },
 
-  // Logout user and clear cookies
+  // Logout user
   logout: async () => {
     try {
       await axiosInstance.get("/auth/logout");
-
-      // Clear the auth token from cookies
-      Cookies.remove("authToken");
-      localStorage.clear();
+      // Token removal is handled by AuthContext; avoid manipulating cookies here
     } catch (error) {
       console.error("Logout error:", error);
-      throw error;
+      throw new Error("An error occurred during logout.");
     }
   },
 };

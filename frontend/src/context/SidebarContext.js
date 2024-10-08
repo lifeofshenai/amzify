@@ -1,8 +1,10 @@
-// context/SidebarContext.js
+// src/context/SidebarContext.js
+
 import { createContext, useContext, useState } from "react";
 
 const SidebarContext = createContext();
 
+// Custom hook to use the SidebarContext
 export const useSidebarContext = () => useContext(SidebarContext);
 
 const SidebarProvider = ({ children }) => {
@@ -14,10 +16,13 @@ const SidebarProvider = ({ children }) => {
   const closeSidebar = () => {
     setIsSidebarOpen(false);
   };
+  const toggleSidebar = () => {
+    setIsSidebarOpen((prev) => !prev);
+  };
 
   return (
     <SidebarContext.Provider
-      value={{ openSidebar, closeSidebar, isSidebarOpen }}
+      value={{ openSidebar, closeSidebar, toggleSidebar, isSidebarOpen }}
     >
       {children}
     </SidebarContext.Provider>

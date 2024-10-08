@@ -1,9 +1,15 @@
-// tailwind.config.js
-
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      // Custom Colors
+      colors: {
+        "primary-pink": "#FF006B",
+        "secondary-dash": "#ff7300", 
+        "dark-pink": "#9F0043",
+      },
+
+      // Existing Animations
       keyframes: {
         slideFadeIn: {
           "0%": { opacity: 0, transform: "translateX(-100%)" },
