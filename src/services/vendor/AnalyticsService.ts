@@ -118,7 +118,7 @@ class AnalyticsService {
         {
           $group: {
             _id: {$dateToString: {format: "%Y-%m-%d", date: "$createdAt"}},
-            dailySales: {$sum: "$totalPrice"},
+            gmv: {$sum: "$totalPrice"},
           },
         },
         {$sort: {_id: 1}},
@@ -162,7 +162,7 @@ class AnalyticsService {
         {
           $group: {
             _id: {$dateToString: {format: "%Y-%m", date: "$createdAt"}},
-            monthlySales: {$sum: "$totalPrice"},
+            gmv: {$sum: "$totalPrice"},
           },
         },
         {$sort: {_id: 1}},

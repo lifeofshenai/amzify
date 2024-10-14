@@ -112,7 +112,14 @@ class AnalyticsController {
       sendSuccessResponse(
         res,
         HTTP_STATUS.OK_200,
-        {sales},
+        {
+          sales: sales.map((sale) => {
+            return {
+              gmv: sale.gmv,
+              revenue: sale.gmv * 0.1,
+            };
+          }),
+        },
         "Sales trends retrieved successfully"
       );
     } catch (error: any) {
