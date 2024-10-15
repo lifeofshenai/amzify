@@ -94,6 +94,7 @@ class ShopifyPlatformService implements IPlatformService {
           totalPrice: parseFloat(order.total_price),
           currency: order.currency,
           lineItems: order.line_items.map((item: any) => ({
+            platformProductId: item.id,
             name: item.name,
             quantity: item.quantity,
             price: parseFloat(item.price),

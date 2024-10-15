@@ -88,8 +88,8 @@ class AnalyticsController {
   async getSalesTrends(req: Request, res: Response): Promise<void> {
     try {
       const {
-        startDate,
-        endDate,
+        months = 6,
+        years = 6,
         platforms: platformFilter,
         filter = "mothly",
       } = req.query;
@@ -98,15 +98,10 @@ class AnalyticsController {
         : undefined;
 
       const sales =
-        filter == "daily"
-          ? await AnalyticsService.getDailySales(
-              startDate ? new Date(startDate as string) : undefined,
-              endDate ? new Date(endDate as string) : undefined,
-              platformsArray
-            )
+        filter == "annually"
+          ? await AnalyticsService.getAnnualSales(Number(years), platformsArray)
           : await AnalyticsService.getMonthlySales(
-              startDate ? new Date(startDate as string) : undefined,
-              endDate ? new Date(endDate as string) : undefined,
+              Number(months),
               platformsArray
             );
       sendSuccessResponse(
@@ -115,7 +110,7 @@ class AnalyticsController {
         {
           sales: sales.map((sale) => {
             return {
-              gmv: sale.gmv,
+              ...sale,
               revenue: sale.gmv * 0.1,
             };
           }),

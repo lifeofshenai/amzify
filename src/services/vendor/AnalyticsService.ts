@@ -1,9 +1,11 @@
 // backend/services/AnalyticsService.ts
 
+import dayjs from "dayjs";
 import {Order} from "../../models/Order";
 import {Store} from "../../models/Store";
 import {HTTP_STATUS} from "../../utils/constants/statusCodes";
 import ErrorResponse from "../../utils/error";
+import {addMonthsToDate, addYearsToDate} from "../../utils/date";
 
 class AnalyticsService {
   /**
@@ -140,13 +142,17 @@ class AnalyticsService {
    * @param platformFilter - Optional array of platforms to filter
    */
   async getMonthlySales(
-    startDate?: Date,
-    endDate?: Date,
+    // startDate?: Date,
+    // endDate?: Date,
+    months: number,
     platformFilter?: string[]
   ): Promise<any[]> {
     try {
       const match: any = {};
+      const startDate = addMonthsToDate(-months);
+      const endDate = new Date();
 
+      console.log(startDate, endDate);
       if (startDate || endDate) {
         match.createdAt = {};
         if (startDate) match.createdAt.$gte = startDate;
@@ -162,6 +168,51 @@ class AnalyticsService {
         {
           $group: {
             _id: {$dateToString: {format: "%Y-%m", date: "$createdAt"}},
+            gmv: {$sum: "$totalPrice"},
+          },
+        },
+        {$sort: {_id: 1}},
+      ]);
+
+      return sales;
+    } catch (error: any) {
+      throw new ErrorResponse(
+        HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
+        error.message
+      );
+    }
+  }
+  /**
+   * Get Sales Trends (Annual Sales) across all platforms or specific platforms
+   * @param startDate - Optional start date
+   * @param endDate - Optional end date
+   * @param platformFilter - Optional array of platforms to filter
+   */
+  async getAnnualSales(
+    years: number,
+    platformFilter?: string[]
+  ): Promise<any[]> {
+    try {
+      const match: any = {};
+      const startDate = addYearsToDate(-years);
+      const endDate = new Date();
+
+      console.log(startDate, endDate);
+      if (startDate || endDate) {
+        match.createdAt = {};
+        if (startDate) match.createdAt.$gte = startDate;
+        if (endDate) match.createdAt.$lte = endDate;
+      }
+
+      if (platformFilter && platformFilter.length > 0) {
+        match.platform = {$in: platformFilter};
+      }
+
+      const sales = await Order.aggregate([
+        {$match: match},
+        {
+          $group: {
+            _id: {$dateToString: {format: "%Y", date: "$createdAt"}},
             gmv: {$sum: "$totalPrice"},
           },
         },
@@ -260,32 +311,70 @@ class AnalyticsService {
       const topProducts = await Order.aggregate([
         {$match: match},
         {$unwind: "$lineItems"},
+        // Lookup to Product collection based on platformProductId
+        {
+          $lookup: {
+            from: "products", // MongoDB collection name for products
+            localField: "lineItems.platformProductId", // Field in Order.lineItems
+            foreignField: "platformProductId", // Field in Product
+            as: "productDetails",
+          },
+        },
+        {$unwind: "$productDetails"}, // Flatten the productDetails array
+        // Lookup to Store collection based on store reference
+        {
+          $lookup: {
+            from: "stores", // MongoDB collection name for stores
+            localField: "store", // Field in Order
+            foreignField: "_id", // Field in Store
+            as: "storeDetails",
+          },
+        },
+        {$unwind: "$storeDetails"}, // Flatten the storeDetails array
+        // Group by productId and storeId to aggregate sales
         {
           $group: {
-            _id: "$lineItems.name",
+            _id: {
+              productId: "$lineItems.platformProductId",
+              storeId: "$store",
+            },
+            productName: {$first: "$productDetails.name"},
+            brand: {$first: "$productDetails.brand"},
+            productImage: {$first: "$productDetails.image"},
+            storeName: {$first: "$storeDetails.name"},
             totalQuantity: {$sum: "$lineItems.quantity"},
             totalSales: {
               $sum: {$multiply: ["$lineItems.price", "$lineItems.quantity"]},
             },
           },
         },
+        // Sort by totalQuantity in descending order
         {$sort: {totalQuantity: -1}},
+        // Limit the results to the specified number
         {$limit: limit},
+        // Project the desired fields
         {
           $project: {
             _id: 0,
-            productName: "$_id",
+            productId: "$_id.productId",
+            storeId: "$_id.storeId",
+            productName: 1,
+            brand: 1,
+            productImage: 1,
+            storeName: 1,
             totalQuantity: 1,
             totalSales: 1,
           },
         },
+        // Optionally, lookup to get more store details or product details if needed
       ]);
 
       return topProducts;
     } catch (error: any) {
+      console.error("Error in getTopSellingProducts:", error);
       throw new ErrorResponse(
         HTTP_STATUS.INTERNAL_SERVER_ERROR_500,
-        error.message
+        error.message || "Failed to fetch top selling products."
       );
     }
   }
@@ -378,12 +467,14 @@ class AnalyticsService {
    * @param endDate - Optional end date
    */
   async getCombinedSalesTrends(
-    startDate?: Date,
-    endDate?: Date
+    // startDate?: Date,
+    // endDate?: Date,
+    months: number
   ): Promise<any[]> {
     try {
       const match: any = {};
-
+      const startDate = dayjs(Date.now()).add(-1 * months, "months");
+      const endDate = Date.now();
       if (startDate || endDate) {
         match.createdAt = {};
         if (startDate) match.createdAt.$gte = startDate;

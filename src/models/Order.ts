@@ -41,6 +41,7 @@ const OrderSchema = new Schema<IOrder>(
     currency: {type: String, required: true},
     lineItems: [
       {
+        platformProductId: {type: String, required: true},
         name: {type: String, required: true},
         quantity: {type: Number, required: true},
         price: {type: Number, required: true},

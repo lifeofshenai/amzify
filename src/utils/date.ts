@@ -3,6 +3,16 @@ export const addDaysToDate = (days: number, stmp = Date.now()) => {
   date.setDate(date.getDate() + days);
   return date;
 };
+export const addMonthsToDate = (months: number, stmp = Date.now()) => {
+  const date = new Date(stmp);
+  date.setMonth(date.getMonth() + months);
+  return date;
+};
+export const addYearsToDate = (years: number, stmp = Date.now()) => {
+  const date = new Date(stmp);
+  date.setFullYear(date.getFullYear() + years);
+  return date;
+};
 export const addSecondsToDate = (seconds: number, stmp = Date.now()) => {
   const date = new Date(stmp);
   date.setSeconds(date.getSeconds() + seconds);
