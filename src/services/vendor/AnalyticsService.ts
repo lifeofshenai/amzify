@@ -273,6 +273,8 @@ class AnalyticsService {
           $project: {
             _id: 0,
             vendorId: "$vendor._id",
+            email: "$vendor.email",
+            dateJoined: "$vendor.createdAt",
             vendorName: {
               $concat: ["$vendor.firstName", " ", "$vendor.lastName"],
             },
